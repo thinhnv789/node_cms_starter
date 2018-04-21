@@ -1,0 +1,58 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/libs/cropperjs/dist/cropper.min.css')
+    link(rel='stylesheet', href='/stylesheets/cropper-editor.css')
+block javascripts
+    script(type='text/javascript', src='/javascripts/select-option.js')
+    script(type='text/javascript', src='/libs/cropperjs/dist/cropper.min.js')
+    script(type='text/javascript', src='/javascripts/cropper-editor.js')
+    script(type='text/javascript').
+        let cropperEditor1 = new CropperEditor({
+            selector: '#cropper-avatar',
+            upload_url: '/api/media/upload-image',
+            uploadDir: '/images/avatar',
+            prefixFileName: 'avatar',
+            isMultiple: false,
+            thumbWidth: 400,
+            thumbHeight: 400,
+            clientOptions: {
+                viewMode: 1,
+                dragMode: 'move',
+                cropBoxResizable: false
+            }
+        });
+        new SelectOption({
+            selector: '#select-status',
+            search: false
+        })
+
+block content
+    include ./form
+    // Content Header (Page header)
+    section.content-header
+        h1
+            | Tạo tài khoản mới
+            small Ahihi
+        ol.breadcrumb
+            li
+                a(href='/')
+                    i.fa.fa-dashboard
+                    |  Dashboard
+            li
+                a(href='/account')
+                    i.fa.fa-users
+                    |  Tài khoản
+            li.active Tạo mới
+    // Main content
+    section.content
+        .row
+            .col-lg-12.col-md-12
+                .box.box-warning
+                    .box-header.with-border
+                        h3.box-title Thông tin tài khoản
+                    // /.box-header
+                    .box-body
+                        +form(data ? data : {})
+                    // /.box-body

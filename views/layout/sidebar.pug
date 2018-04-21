@@ -1,0 +1,115 @@
+// Left side column. contains the sidebar
+aside.main-sidebar
+	// sidebar: style can be found in sidebar.less
+	section.sidebar
+		// Sidebar user panel
+		.user-panel
+			.pull-left.image
+				img.img-circle(src=(user && user.avatar) ? user.avatarUrl : '', alt='User Image')
+			.pull-left.info
+				p #{user ? user.fullName : 'Anonymous'}
+				a(href='#')
+					i.fa.fa-circle.text-success
+					|  Online
+		// search form
+		form.sidebar-form(action='#', method='get')
+			.input-group
+				input.form-control(type='text', name='q', placeholder='Search...')
+				span.input-group-btn
+					button#search-btn.btn.btn-flat(type='submit', name='search')
+						i.fa.fa-search
+		// /.search form
+		// sidebar menu: : style can be found in sidebar.less
+		ul.sidebar-menu(data-widget='tree')
+			li.header
+				i.fa.fa-bars &nbsp;&nbsp;MAIN MENU
+			li.active
+				a(href='/')
+					i.fa.fa-dashboard
+					span Dashboard
+					//- span.pull-right-container
+					//- 	small.label.pull-right.bg-green new
+			li.treeview
+				a(href='#')
+					i.fa.fa-folder
+					span Examples
+					span.pull-right-container
+						i.fa.fa-angle-left.pull-right
+				ul.treeview-menu
+					li
+						a(href='../examples/invoice.html')
+							i.fa.fa-circle-o
+							|  Invoice
+					li
+						a(href='../examples/profile.html')
+							i.fa.fa-circle-o
+							|  Profile
+					li
+						a(href='../examples/login.html')
+							i.fa.fa-circle-o
+							|  Login
+					li
+						a(href='../examples/register.html')
+							i.fa.fa-circle-o
+							|  Register
+					li
+						a(href='../examples/lockscreen.html')
+							i.fa.fa-circle-o
+							|  Lockscreen
+			li.treeview
+				a(href='#')
+					i.fa.fa-share
+					span Multilevel
+					span.pull-right-container
+						i.fa.fa-angle-left.pull-right
+				ul.treeview-menu
+					li
+						a(href='#')
+							i.fa.fa-circle-o
+							|  Level One
+					li.treeview
+						a(href='#')
+							i.fa.fa-circle-o
+							|  Level One
+							span.pull-right-container
+								i.fa.fa-angle-left.pull-right
+						ul.treeview-menu
+							li
+								a(href='#')
+									i.fa.fa-circle-o
+									|  Level Two
+							li.treeview
+								a(href='#')
+									i.fa.fa-circle-o
+									|  Level Two
+									span.pull-right-container
+										i.fa.fa-angle-left.pull-right
+								ul.treeview-menu
+									li
+										a(href='#')
+											i.fa.fa-circle-o
+											|  Level Three
+									li
+										a(href='#')
+											i.fa.fa-circle-o
+											|  Level Three
+					li
+						a(href='#')
+							i.fa.fa-circle-o
+							|  Level One
+			li
+				a(href='https://adminlte.io/docs')
+					i.fa.fa-book
+					span Documentation
+			li.header
+				i.fa.fa-cogs &nbsp;&nbsp;SYSTEM
+			li
+				a(href='#')
+					i.fa.fa-cog
+					span Settings
+			li
+				a(href='/account')
+					i.fa.fa-users
+					span Tài khoản
+	// /.sidebar
+// ===============================================

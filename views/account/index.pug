@@ -1,0 +1,95 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/stylesheets/data-table.css')
+block javascripts
+    script(src='/javascripts/select-option.js')
+    script(src='/javascripts/data-table.js')
+    script(type='text/javascript').
+        //- document.addEventListener("DOMContentLoaded", function(event) {
+            let dataTable = new DataTable({
+                selector: '#table-accounts',
+                urlFilter: '/account/search',
+                //- columns: ['STT', 'firstName', 'lastName', 'userName', 'email'],
+                filters: [
+                    {
+                        name: 'fullName',
+                        type: 'text'
+                    },
+                    {
+                        name: 'email',
+                        type: 'text'
+                    },
+                    {
+                        name: 'statusDisplay',
+                        type: 'select',
+                        key: 'value',
+                        value: 'text',
+                        placeholder: 'Trạng thái',
+                        search: false,
+                        options: [
+                            {
+                                value: 1,
+                                text: 'Đã kích hoạt'
+                            },
+                            {
+                                value: 0,
+                                text: 'Chưa kích hoạt'
+                            }
+                        ]
+                    }
+                ]
+            })
+        //- });
+
+
+block content
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Danh sách tài khoản
+        small Ahihi
+      ol.breadcrumb
+        li
+          a(href='/')
+            i.fa.fa-dashboard
+            |  Dashboard
+        li.active Tài khoản
+    // Main content
+    section.content
+        .row
+            .col-lg-12.col-md-12
+                a.btn.btn-success(href='/account/create') Tạo mới
+                hr
+                table#table-accounts.table.table-responsive.table-border
+                    thead
+                        tr
+                            th(name='STT') STT
+                            th(name='fullName') Họ tên
+                            th.text-center(name='avatar') Ảnh đại diện
+                            th(name='userName') Tên đăng nhập
+                            th(name='email') Email
+                            th(name='statusDisplay', style='width: 140px;') Trạng thái
+                            th.text-center(name='actions', actions={view: '/account/view', edit: '/account/edit', delete: '/account/delete'}) Hành động
+                    tbody 
+                        each dt, i in data
+                            tr
+                                td #{i+1}
+                                td #{dt.fullName}
+                                td.text-center(style='font-size: 50px;')
+                                    if dt.avatar
+                                        img(src=dt.avatarUrl, style='width: 100px;')
+                                    else
+                                        i.fa.fa-user
+                                td #{dt.userName}
+                                td #{dt.email}
+                                td #{dt.statusDisplay}
+                                td.text-center
+                                    a.user-action.btn.btn-default(href='/account/view/' + dt._id)
+                                        em.fa.fa-eye
+                                    a.user-action.btn.btn-success(href='/account/edit/' + dt._id)
+                                        em.fa.fa-pencil
+                                    a.user-action.btn.btn-danger(href='/account/delete/' + dt._id, onclick='return confirmAction("Bạn có chắc chắn muốn xóa tòa nhà này không?", "/apartment-building/delete/' + dt._id + '")')
+                                        em.fa.fa-trash
+

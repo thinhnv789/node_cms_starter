@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title Login
+    // Tell the browser to be responsive to screen width
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+    // Bootstrap
+    link(rel='stylesheet', href='/themes/admin-lte/libs/bootstrap/dist/css/bootstrap.min.css')
+    // Font Awesome
+    link(rel='stylesheet', href='/themes/admin-lte/libs/font-awesome/css/font-awesome.min.css')
+  // ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT
+  // the fixed layout is not compatible with sidebar-mini
+  body.hold-transition.skin-blue.fixed.sidebar-mini
+    #login-overlay.modal-dialog
+        .modal-content
+            .modal-header
+                h4#myModalLabel.modal-title.text-center Login to cms starter
+            .modal-body
+                .row
+                    .col-lg-6.col-md-6
+                        .well
+                            form#loginForm(method='POST', action='/auth/login', novalidate='novalidate')
+                                .form-group
+                                    label.control-label(for='userName') Tên đăng nhập
+                                    input#username.form-control(type='text', name='userName', value='', required='', title='Please enter you username', placeholder='example@gmail.com')
+                                    span.help-block
+                                .form-group
+                                    label.control-label(for='password') Mật khẩu
+                                    input#password.form-control(type='password', name='password', value='', required='', title='Please enter your password')
+                                    span.help-block
+                                #loginErrorMsg.alert.alert-error.hide Wrong username og password
+                                .checkbox
+                                    label
+                                        input#remember(type='checkbox', name='remember')
+                                        |  Remember login
+                                button.btn.btn-success.btn-block(type='submit') Login
+                                a.btn.btn-default.btn-block(href='/forgot/') Help to login
+                    .col-lg-6.col-md-6
+                        p.lead
+                            | Register now for 
+                            span.text-success FREE
+                        ul.list-unstyled(style='line-height: 2')
+                            li
+                            span.fa.fa-check.text-success
+                            |  See all your orders
+                            li
+                            span.fa.fa-check.text-success
+                            |  Fast re-order
+                            li
+                            span.fa.fa-check.text-success
+                            |  Save your favorites
+                            li
+                            span.fa.fa-check.text-success
+                            |  Fast checkout
+                            li
+                            span.fa.fa-check.text-success
+                            |  Get a gift 
+                            small (only new customers)
+                            li
+                            a(href='/read-more/')
+                                u Read more
+                        p
+                            a.btn.btn-info.btn-block(href='/new-customer/') Yes please, register now!
+
+    // jQuery 
+    script(type='text/javascript', src='/themes/admin-lte/libs/jquery/dist/jquery.min.js')
+    // Bootstrap
+    script(type='text/javascript', src='/themes/admin-lte/libs/bootstrap/dist/js/bootstrap.min.js')
