@@ -8,6 +8,7 @@ var ioEvents = function(io) {
             socket.user = socket.handshake.session.user;
             socket.join(socket.user._id);
         } else {
+            console.log('server disconnect');
             socket.emit('authenticate_failed');
             socket.disconnect(true);
         }
