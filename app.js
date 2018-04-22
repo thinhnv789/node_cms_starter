@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var sharedsession = require("express-socket.io-session");
 var logger = require('morgan');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
@@ -51,6 +52,9 @@ var appSession = session({
   })
 });
 app.use(appSession);
+io.use(sharedsession(appSession, {
+  autoSave:true
+}));
 app.use(flash());
 
 // Pass user login to client

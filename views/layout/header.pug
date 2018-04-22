@@ -44,21 +44,17 @@ header.main-header
 						li.footer
 							a(href='#') See All Messages
 				// Notifications: style can be found in dropdown.less
-				li.dropdown.notifications-menu
+				li.dropdown#header-notifications.notifications-menu
 					a.dropdown-toggle(href='#', data-toggle='dropdown')
 						i.fa.fa-bell-o
-						span.label.label-warning 10
+						span.notification-count.label.label-warning(style='display:none;') 0
 					ul.dropdown-menu
-						li.header You have 10 notifications
+						li.notification-title.header Không có thông báo mới
 						li
 							// inner menu: contains the actual data
-							ul.menu
-								li
-									a(href='#')
-										i.fa.fa-users.text-aqua
-										|  5 new members joined today
+							ul.notification-list.menu
 						li.footer
-							a(href='#') View all
+							a(href='#') Xem thêm
 				// Tasks: style can be found in dropdown.less
 				li.dropdown.tasks-menu
 					a.dropdown-toggle(href='#', data-toggle='dropdown')

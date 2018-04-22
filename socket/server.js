@@ -1,9 +1,16 @@
 
 var ioEvents = function(io) {
     io.on('connection', (socket) => {
+        /* Ignore duplicate connection when restart server */
         io.removeAllListeners();
-        console.log('socket connected');
-        socket.join('helpdesk');
+        
+        if (socket.handshake.session.user) {
+            socket.user = socket.handshake.session.user;
+            socket.join(socket.user._id);
+        } else {
+            socket.emit('authenticate_failed');
+            socket.disconnect(true);
+        }
         // socket.emit('hello', 'hello world');
     })
 }

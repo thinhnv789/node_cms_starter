@@ -67,7 +67,9 @@ exports.postLogin = (req, res, next) => {
                         newLogin.platform = p.name;
                         newLogin.save();
                     }
-
+                    if (global.io) {
+                        global.io.sockets.emit('member_login', user.fullName + ' đã đăng nhập');
+                    }
                     res.redirect(req.session.redirectTo || '/');
                 } else {
                     return res.redirect('/user/login');
