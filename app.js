@@ -19,6 +19,7 @@ dotenv.config({path: './env/.env'});
 const indexRouter = require('./routes/index');
 const accountRouter = require('./routes/account');
 const authRouter = require('./routes/auth');
+const loginManagerRouter = require('./routes/login-manager');
 
 const apiMediaRouter = require('./apis/routers/media');
 
@@ -63,6 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/account', accountRouter);
 app.use('/auth', authRouter);
+app.use('/login-manager', loginManagerRouter);
 
 // Api routers
 app.use('/api/media', apiMediaRouter);

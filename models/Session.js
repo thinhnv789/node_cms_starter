@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
  * @name sessionModel
  */
 const sessionSchema = new mongoose.Schema({
+  _id: { type: String },
   session: { type: String },
   expires: { type: Date }
 }, {timestamps: true, usePushEach: true});

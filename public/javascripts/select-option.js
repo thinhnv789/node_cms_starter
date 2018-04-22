@@ -77,8 +77,12 @@ class SelectOption {
                 selectChoices.classList.toggle('select-hidden');
                 selectInstate.classList.toggle('show-choices');
                 /* Trigger select on change */
-                this.selector.onchange({target: this.selector});
+                // this.selector.onchange({target: this.selector});
             }.bind(this);
+
+            if (options[i].value === this.selector.value) {
+                selectedItem.textContent = choiceLi.textContent;
+            }
 
             choiceUl.appendChild(choiceLi);
         }

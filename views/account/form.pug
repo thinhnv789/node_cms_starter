@@ -53,8 +53,8 @@ mixin form(data={})
             .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
                 label.control-label Trạng thái
                 select#select-status.form-control(name='status')
-                    option(value=1) Kích hoạt
-                    option(value=0) Không kích hoạt 
+                    option(value=1, selected=(data.status == 1) ? true : false) Kích hoạt
+                    option(value=0, selected=(data.status == 0) ? true : false) Vô hiệu hóa
         // Box footer        
         .box-footer
             button.btn.btn-success(type='submit')

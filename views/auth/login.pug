@@ -25,7 +25,7 @@ html
     #login-overlay.modal-dialog
         .modal-content
             .modal-header
-                h4#myModalLabel.modal-title.text-center Login to cms starter
+                h4#myModalLabel.modal-title.text-center Đăng nhập hệ thống quản trị
             .modal-body
                 .row
                     .col-lg-6.col-md-6
@@ -43,35 +43,25 @@ html
                                 .checkbox
                                     label
                                         input#remember(type='checkbox', name='remember')
-                                        |  Remember login
-                                button.btn.btn-success.btn-block(type='submit') Login
-                                a.btn.btn-default.btn-block(href='/forgot/') Help to login
+                                        |  Lưu đăng nhập
+                                button.btn.btn-success.btn-block(type='submit') Đăng nhập
+                                a.btn.btn-default.btn-block(href='/auth/forgot-password') Quên mật khẩu
                     .col-lg-6.col-md-6
-                        p.lead
-                            | Register now for 
-                            span.text-success FREE
-                        ul.list-unstyled(style='line-height: 2')
-                            li
-                            span.fa.fa-check.text-success
-                            |  See all your orders
-                            li
-                            span.fa.fa-check.text-success
-                            |  Fast re-order
-                            li
-                            span.fa.fa-check.text-success
-                            |  Save your favorites
-                            li
-                            span.fa.fa-check.text-success
-                            |  Fast checkout
-                            li
-                            span.fa.fa-check.text-success
-                            |  Get a gift 
-                            small (only new customers)
-                            li
-                            a(href='/read-more/')
-                                u Read more
-                        p
-                            a.btn.btn-info.btn-block(href='/new-customer/') Yes please, register now!
+                        p.lead.text-center
+                            | Đăng nhập bằng
+                            //- span.text-success FREE
+                        ul.list-unstyled.text-center(style='line-height: 2')
+                            li.btn.btn-default.fb-login(style='background:#3b5998;color:#fff;width:100%;max-width:222px;text-align:left;')
+                                span.fa.fa-facebook.text-success(style='color:#fff;width:20px;')
+                                |  Đăng nhập bằng Facebook
+                            li.btn.btn-default.gplus-login(style='background:#e74c3d;color:#fff;width:100%;max-width:222px;text-align:left;margin-top:5px;')
+                                span.fa.fa-google-plus.text-success(style='color:#fff;width:20px;')
+                                |  Đăng nhập bằng Google
+                            
+                        //-     a(href='/read-more/')
+                        //-         u Read more
+                        //- p
+                        //-     a.btn.btn-info.btn-block(href='/new-customer/') Yes please, register now!
 
     // jQuery 
     script(type='text/javascript', src='/themes/admin-lte/libs/jquery/dist/jquery.min.js')

@@ -11,6 +11,8 @@ exports.getIndex = (req, res, next) => {
     try {
         UserModel.find({}).exec((err, users) => {
             res.render('account/index', {
+                title: 'Danh sách tài khoản',
+                current: 'account',
                 data: users
             });
         })
@@ -73,7 +75,10 @@ exports.getSearch = (req, res, next) => {
  */
 exports.getCreate = (req, res, next) => {
     try {
-        res.render('account/create');
+        res.render('account/create', {
+            title: 'Tạo tài khoản',
+            current: 'account',
+        });
     } catch (e) {
        
     }
@@ -108,7 +113,7 @@ exports.postCreate = (req, res, next) => {
                         userName: req.body.userName || null,
                         email: req.body.email || null,
                         avatar: req.body.avatar || null,
-                        birthDay: req.body.birthDay || null,
+                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : null,
                         password: req.body.password || null,
                         status: req.body.status || 0
                     }
@@ -141,6 +146,8 @@ exports.getEdit = (req, res, next) => {
     try {
         UserModel.findById(req.params.accountId).exec((err, account) => {
             res.render('account/edit', {
+                title: 'Sửa thông tin tài khoản',
+                current: 'account',
                 data: account
             });
         });

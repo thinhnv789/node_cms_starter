@@ -1,4 +1,7 @@
+const platform = require('platform');
+
 const UserModel = require('./../models/User');
+const LoginManager = require('./../models/LoginManager');
 
 const Auth = require('../helpers/auth');
 /**
@@ -48,7 +51,24 @@ exports.postLogin = (req, res, next) => {
                         req.session.cookie.maxAge = parseInt(process.env.SESSION_EXP);
                     }
 
-                    return res.redirect(req.session.redirectTo || '/');
+                    /**
+                     * Update login manager collections
+                     */
+                    const p = platform.parse(req.headers['user-agent']);
+                    console.log('p', p);
+                    if (p) {
+                        console.log('ttt');
+                        let newLogin = new LoginManager();
+                        newLogin.user = user._id;
+                        newLogin.userName = user.userName,
+                        newLogin.fullName = user.fullName,
+                        newLogin.sessionId = req.sessionID;
+                        newLogin.os = p.os;
+                        newLogin.platform = p.name;
+                        newLogin.save();
+                    }
+
+                    res.redirect(req.session.redirectTo || '/');
                 } else {
                     return res.redirect('/user/login');
                 }
@@ -61,7 +81,12 @@ exports.postLogin = (req, res, next) => {
 };
 
 exports.getLogout = (req, res, next) => {
+    LoginManager.findOne({sessionId: req.sessionID}).exec((err, deviceLogin) => {
+        if (deviceLogin) {
+            deviceLogin.remove();
+        }
+    });
     req.session.cookie.maxAge = 0;
     req.session.destroy();
-    return res.redirect('/auth/login');
+    res.redirect('/auth/login');
 }

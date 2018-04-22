@@ -7,8 +7,12 @@ const SessionModel = require('./../models/Session');
  * @param {*} next 
  */
 exports.getIndex = (req, res, next) => {
+    console.log(req.sessionID);
     try {
-        res.render('dashboard/index');
+        res.render('dashboard/index', {
+            title: 'Hệ thống quản trị - Dashboard',
+            current: 'dashboard'
+        });
     } catch (e) {
        
     }
