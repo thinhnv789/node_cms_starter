@@ -24,6 +24,9 @@ const loginManagerRouter = require('./routes/login-manager');
 const apiMediaRouter = require('./apis/routers/media');
 
 var app = express();
+var io = require('socket.io')();
+var ioEvents = require('./socket/server')(io);
+global.io = io;
 app.locals.moment = require('moment');
 
 // view engine setup

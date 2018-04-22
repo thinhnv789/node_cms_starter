@@ -1,5 +1,6 @@
 const UserModel = require('./../models/User');
 const SessionModel = require('./../models/Session');
+
 /**
  * 
  * @param {*} req 
@@ -7,7 +8,8 @@ const SessionModel = require('./../models/Session');
  * @param {*} next 
  */
 exports.getIndex = (req, res, next) => {
-    console.log(req.sessionID);
+    global.io.sockets.emit('hello', 'hello ttt');
+
     try {
         res.render('dashboard/index', {
             title: 'Hệ thống quản trị - Dashboard',
