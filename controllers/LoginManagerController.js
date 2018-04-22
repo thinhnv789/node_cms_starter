@@ -88,8 +88,10 @@ exports.getDelete = (req, res, next) => {
                             })
                         }
                     } else {
-                        req.flash('success', 'Không tìm thấy session đăng nhập');
-                        res.redirect('/login-manager');
+                        login.remove((err) => {
+                            req.flash('errors', 'Không tìm thấy session đăng nhập.');
+                            res.redirect('/login-manager');
+                        });
                     }
                 })
             } else {
