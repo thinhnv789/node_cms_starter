@@ -27,6 +27,7 @@ block javascripts
                         key: 'value',
                         value: 'text',
                         placeholder: 'Trạng thái',
+                        style: 'width:140px;',
                         search: false,
                         options: [
                             {
@@ -62,34 +63,35 @@ block content
             .col-lg-12.col-md-12
                 a.btn.btn-success(href='/account/create') Tạo mới
                 hr
-                table#table-accounts.table.table-responsive.table-border
-                    thead
-                        tr
-                            th(name='STT') STT
-                            th(name='fullName') Họ tên
-                            th.text-center(name='avatar') Ảnh đại diện
-                            th(name='userName') Tên đăng nhập
-                            th(name='email') Email
-                            th(name='statusDisplay', style='width: 140px;') Trạng thái
-                            th.text-center(name='actions', actions={view: '/account/view', edit: '/account/edit', delete: '/account/delete'}) Hành động
-                    tbody 
-                        each dt, i in data
+                .x-scroll(style='width: 100%; overflow-x: auto;overflow-y: hidden;')
+                    table#table-accounts.table.table-responsive.table-border
+                        thead
                             tr
-                                td #{i+1}
-                                td #{dt.fullName}
-                                td.text-center(style='font-size: 50px;')
-                                    if dt.avatar
-                                        img(src=dt.avatarUrl, style='width: 100px;')
-                                    else
-                                        i.fa.fa-user
-                                td #{dt.userName}
-                                td #{dt.email}
-                                td #{dt.statusDisplay}
-                                td.text-center
-                                    a.user-action.btn.btn-default(href='/account/view/' + dt._id)
-                                        em.fa.fa-eye
-                                    a.user-action.btn.btn-success(href='/account/edit/' + dt._id)
-                                        em.fa.fa-pencil
-                                    a.user-action.btn.btn-danger(href='/account/delete/' + dt._id, onclick='return confirmAction("Bạn có chắc chắn muốn xóa tòa nhà này không?", "/apartment-building/delete/' + dt._id + '")')
-                                        em.fa.fa-trash
+                                th(name='STT') STT
+                                th(name='fullName') Họ tên
+                                th.text-center(name='avatar') Ảnh đại diện
+                                th(name='userName') Tên đăng nhập
+                                th(name='email') Email
+                                th(name='statusDisplay') Trạng thái
+                                th.text-center(name='actions', actions={view: '/account/view', edit: '/account/edit', delete: '/account/delete'}, style='width: 140px;display: block;border-bottom:0;') Hành động
+                        tbody 
+                            each dt, i in data
+                                tr
+                                    td #{i+1}
+                                    td #{dt.fullName}
+                                    td.text-center(style='font-size: 50px;')
+                                        if dt.avatar
+                                            img(src=dt.avatarUrl, style='width: 100px;')
+                                        else
+                                            i.fa.fa-user
+                                    td #{dt.userName}
+                                    td #{dt.email}
+                                    td #{dt.statusDisplay}
+                                    td.text-center
+                                        a.user-action.btn.btn-default(href='/account/view/' + dt._id)
+                                            em.fa.fa-eye
+                                        a.user-action.btn.btn-success(href='/account/edit/' + dt._id)
+                                            em.fa.fa-pencil
+                                        button.user-action.btn.btn-danger(onclick='return confirmDelete("Bạn có chắc chắn muốn xóa tài khoản này không?", "/account/delete/' + dt._id + '")')
+                                            em.fa.fa-trash
 

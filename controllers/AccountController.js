@@ -1,4 +1,6 @@
 const UserModel = require('./../models/User');
+
+const moment = require('moment');
 /**
  * 
  * @param {*} req 
@@ -106,6 +108,7 @@ exports.postCreate = (req, res, next) => {
                         userName: req.body.userName || null,
                         email: req.body.email || null,
                         avatar: req.body.avatar || null,
+                        birthDay: req.body.birthDay || null,
                         password: req.body.password || null,
                         status: req.body.status || 0
                     }
@@ -163,16 +166,18 @@ exports.postUpdate = (req, res, next) => {
                 return res.redirect('/account/edit/' + req.params.accountId);
             } else {
                 try {
+                    console.log('req', req.body.birthDay);
                     let newData = {
                         firstName: req.body.firstName || null,
                         lastName: req.body.lastName || null,
                         userName: req.body.userName || null,
                         email: req.body.email || null,
                         avatar: req.body.avatar || null,
+                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : null,
                         status: req.body.status || 0
                     }
-
-                    UserModel.updateOne({_id: req.params.accountId}, newData).exec((err, result, data) => {
+                    console.log('tt', newData);
+                    UserModel.updateOne({_id: req.params.accountId}, newData).exec((err) => {
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
                             res.redirect('/account/edit/' + req.params.accountId);
@@ -182,11 +187,27 @@ exports.postUpdate = (req, res, next) => {
                         }
                     });
                 } catch (e) {
-
+                    console.log(e);
                 }
             }
         });
     } catch (e) {
-       
+       console.log(e);
+    }
+}
+
+exports.getDelete = (req, res, next) => {
+    try {
+        UserModel.deleteOne({_id: req.params.accountId}).exec((err) => {
+            if (err) {
+                req.flash('errors', 'Tài khoản không tồn tại');
+                return res.redirect('/account');
+            }
+            req.flash('success', 'Xóa tài khoản thành công');
+            return res.redirect('/account');
+        })
+    } catch (e) {
+        req.flash('errors', 'Có lỗi xảy ra');
+        return res.redirect('/account');
     }
 }

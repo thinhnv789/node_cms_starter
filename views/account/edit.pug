@@ -1,14 +1,24 @@
 extends ../layout/default
 
 block stylesheets
+    link(rel='stylesheet', href='/libs/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css')
     link(rel='stylesheet', href='/stylesheets/select-option.css')
     link(rel='stylesheet', href='/libs/cropperjs/dist/cropper.min.css')
     link(rel='stylesheet', href='/stylesheets/cropper-editor.css')
 block javascripts
+    script(type='text/javascript', src='/libs/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js')
     script(type='text/javascript', src='/javascripts/select-option.js')
     script(type='text/javascript', src='/libs/cropperjs/dist/cropper.min.js')
     script(type='text/javascript', src='/javascripts/cropper-editor.js')
     script(type='text/javascript').
+        $('#birthDay').datetimepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
         let cropperEditor1 = new CropperEditor({
             selector: '#cropper-avatar',
             upload_url: '/api/media/upload-image',
@@ -23,6 +33,10 @@ block javascripts
                 cropBoxResizable: false
             }
         });
+        new SelectOption({
+            selector: '#select-status',
+            search: false
+        })
 
 
 block content

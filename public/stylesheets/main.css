@@ -1,0 +1,35 @@
+/* Css confirm action*/
+.content-center {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  display: table;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.8);
+}
+.content-center .content-center-container {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.confirm-action-container {
+  display: inline-block;
+  background: #fff;
+  color: #000000;
+  padding: 15px 15px 25px 15px;
+  border-radius: 10px;
+  max-width: 360px;
+}
+.confirm-action-container .icon.icon-question i {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.confirm-action-container .confirm-actions {
+  margin-top: 25px;
+}
+.confirm-actions .btn {
+  margin: 0 10px;
+}
+/*--- End confirm action ---*/

@@ -12,6 +12,7 @@ class DataTable {
 
     init (selector) {
         let tableSelector = document.querySelector(selector);
+        this.tableSelector = tableSelector;
         if (tableSelector) {
             tableSelector.classList.add('t-data-table');
 
@@ -102,6 +103,7 @@ class DataTable {
     generateInputSelectOption(data) {
         let searchItem = document.createElement('div');
         searchItem.className = 'search-item input-text';
+        searchItem.style = data.style;
 
         let inputSearch = document.createElement('select');
         inputSearch.className = 'form-control';

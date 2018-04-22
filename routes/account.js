@@ -18,4 +18,6 @@ router.get('/edit/:accountId', passport.isAuthenticated, AccountController.getEd
 
 router.post('/update/:accountId', passport.isAuthenticated, AccountController.postUpdate);
 
+router.get('/delete/:accountId', passport.isAuthenticated, AccountController.getDelete);
+
 module.exports = router;

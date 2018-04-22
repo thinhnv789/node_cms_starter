@@ -28,6 +28,15 @@ mixin form(data={})
                 input#cropper-avatar.form-control(type='file', name='avatar', value=(data.avatar || null), imgSrc=(data.avatar ? (process.env.MEDIA_URL + '/images/avatar/thumb/' + data.avatar) : null))
                 if errors && errors.avatar
                     span.help-block #{errors.avatar.msg}
+            .col-lg-6.col-md-6(class=errors && errors.birthDay && 'has-error')
+                label.control-label Ngày sinh
+                .input-group.date
+                    .input-group-addon
+                        i.fa.fa-calendar
+                    input#birthDay.form-control(type='text', name='birthDay', value=(moment(data.birthDay).format('DD-MM-YYYY') || ''))
+                if errors && errors.birthDay
+                    span.help-block #{errors.birthDay.msg}
+                
         if !data._id
             .form-group
                 .col-lg-6.col-md-6(class=errors && errors.password && 'has-error')

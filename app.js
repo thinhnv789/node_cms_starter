@@ -23,6 +23,7 @@ const authRouter = require('./routes/auth');
 const apiMediaRouter = require('./apis/routers/media');
 
 var app = express();
+app.locals.moment = require('moment');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
