@@ -29,4 +29,9 @@ socket.on('connect', () => {
             notiList.innerHTML += notiItem;
         }
     });
+
+    /* Event socket disconnected from server */
+    socket.on('disconnect', () => {
+        console.log('server disconnect');
+    })
 });

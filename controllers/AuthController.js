@@ -51,22 +51,6 @@ exports.postLogin = (req, res, next) => {
                         req.session.cookie.maxAge = parseInt(process.env.SESSION_EXP);
                     }
 
-                    /**
-                     * Update login manager collections
-                     */
-                    const p = platform.parse(req.headers['user-agent']);
-                    console.log('p', p);
-                    if (p) {
-                        console.log('ttt');
-                        let newLogin = new LoginManager();
-                        newLogin.user = user._id;
-                        newLogin.userName = user.userName,
-                        newLogin.fullName = user.fullName,
-                        newLogin.sessionId = req.sessionID;
-                        newLogin.os = p.os;
-                        newLogin.platform = p.name;
-                        newLogin.save();
-                    }
                     if (global.io) {
                         global.io.sockets.emit('member_login', user.fullName + ' đã đăng nhập');
                     }

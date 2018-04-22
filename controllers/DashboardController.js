@@ -8,8 +8,8 @@ const SessionModel = require('./../models/Session');
  * @param {*} next 
  */
 exports.getIndex = (req, res, next) => {
-    global.io.sockets.emit('hello', 'hello ttt');
-
+    // global.io.sockets.emit('hello', 'hello ttt');
+    // console.log('global.io.sockets', global.io.sockets);
     try {
         res.render('dashboard/index', {
             title: 'Hệ thống quản trị - Dashboard',

@@ -4,7 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var sharedsession = require("express-socket.io-session");
+var io = require('socket.io')();
+var ioEvents = require('./socket/server')(io);
+// var sharedsession = require("express-socket.io-session");
 var logger = require('morgan');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
@@ -25,8 +27,7 @@ const loginManagerRouter = require('./routes/login-manager');
 const apiMediaRouter = require('./apis/routers/media');
 
 var app = express();
-var io = require('socket.io')();
-var ioEvents = require('./socket/server')(io);
+
 global.io = io;
 app.locals.moment = require('moment');
 
@@ -52,9 +53,9 @@ var appSession = session({
   })
 });
 app.use(appSession);
-io.use(sharedsession(appSession, {
-  autoSave:true
-}));
+// io.use(sharedsession(appSession, {
+//   autoSave:true
+// }));
 app.use(flash());
 
 // Pass user login to client
@@ -62,6 +63,8 @@ app.use((req, res, next) => {
   // Allow request from all domain
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.locals.user = req.session.user;
+  global.io.session = req.session;
+  global.io.sessionID = req.sessionID;
   next();
 });
 
