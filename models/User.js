@@ -64,7 +64,7 @@ userSchema.virtual('fullName').get(function () {
  * Function get avatar image url
  */
 userSchema.virtual('avatarUrl').get(function () {
-  return process.env.MEDIA_URL + '/images/avatar/origin/' + this.avatar;
+  return process.env.MEDIA_URL + '/images/avatar/thumb/' + this.avatar;
 });
 
 /**

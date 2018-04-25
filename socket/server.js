@@ -27,6 +27,19 @@ var ioEvents = function(io) {
             }
 
             /**
+             * Event send message
+             */
+            socket.on('send_message', (data) => {
+                data.sender = socket.user;
+                io.to(data.to._id).emit('message', data);
+
+                /**
+                 * Event send message to sender
+                 */
+                io.to(socket.user._id).emit('owner_message', data);
+            })
+
+            /**
              * Event socket disconnected
              */
             socket.on('disconnect', () => {

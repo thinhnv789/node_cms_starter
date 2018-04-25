@@ -1,0 +1,103 @@
+#list-contacts {
+    position: fixed;
+    height: 100%;
+    top: 0;
+    right: 0;
+    padding-top: 50px;
+    background: #e9ebee;
+    box-shadow: 1px 0 0 #f0f0f2 inset;
+    border-left-color: #ccc;
+    border-left: 1px solid rgba(0, 0, 0, .18);
+    z-index: 100;
+    width: 220px;
+}
+#list-contacts.contact-hidden {
+    display: none;
+}
+#btn-contact-fixed {
+    position: fixed;
+    bottom: 50px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #00a65a;
+    border: 2px solid #ddd;
+    transition: all 0.68s;
+    z-index: 110;
+}
+#btn-contact-fixed:hover {
+    background: #00a65a;
+    color: #ffffff;
+}
+#btn-contact-fixed i {
+    font-size: 20px;
+}
+#btn-contact-fixed:focus, #btn-contact-fixed:active {
+    outline: none;
+}
+#footer-contact {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    box-shadow: 1px 0 0 #ccc;
+}
+#search-contact-icon {
+    width: 20px;
+    display: inline-block;
+    background: #ffffff;
+    height: 34px;
+    vertical-align: top;
+    line-height: 34px;
+    cursor: pointer;
+}
+#search-contact-icon:hover {
+    color: #f1981d;
+}
+#search-contact-keyword {
+    display: inline-block;
+    width: calc(100% - 20px);
+    border: 0;
+    height: 34px;
+    line-height: 34px;
+    padding: 6px 12px;
+    outline: none;
+}
+.contact-item {
+    width: 100%;
+    cursor: pointer;
+    display: table;
+    vertical-align: middle;
+    margin: 5px 0;
+    padding: 5px 10px;
+}
+.contact-item:hover {
+    background: #dddfe2;
+}
+.contact-item .avatar, .contact-item .contact-info, .contact-item .online-status {
+    display: table-cell;
+    vertical-align: middle;
+}
+.contact-item .contact-info {
+    padding: 0 15px;
+}
+.contact-item .avatar, .contact-item .avatar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.contact-item .online {
+    background: rgb(66, 183, 42);
+    border-radius: 50%;
+    display: block;
+    height: 6px;
+    margin-left: 4px;
+    width: 6px;
+}
+@media (max-width: 767px) {
+    #list-contacts {
+        padding-top: 100px;
+    }
+}

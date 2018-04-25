@@ -28,6 +28,9 @@ html
     // Google Font
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic')
 
+    link(rel='stylesheet', href='/stylesheets/pages/contact.css')
+    link(rel='stylesheet', href='/stylesheets/chat.css')
+
     block stylesheets
   // ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT
   // the fixed layout is not compatible with sidebar-mini
@@ -43,7 +46,9 @@ html
       .content-wrapper
         include ./flash
         block content
-
+        include ./contact
+        include ./chat
+        
       include ./footer
 			
       .control-sidebar-bg
@@ -61,5 +66,6 @@ html
     // AdminLTE for demo purposes
     script(src='/javascripts/main.js')
     script(src='/socket.io/socket.io.js')
-    script(src='/javascripts/socket-client.js')
+    script(src='/javascripts/chat.js')
+    script(src='/javascripts/pages/contact.js')
     block javascripts

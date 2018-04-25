@@ -27,12 +27,6 @@ exports.getSearch = (req, res, next) => {
         let findCondition = {};
 
         /** Query search */
-        // if (params.firstName) {
-        //     findCondition.firstName = new RegExp('.*' + params.firstName + '.*', "i");
-        // }
-        // if (params.lastName) {
-        //     findCondition.lastName = new RegExp('.*' + params.lastName + '.*', "i");
-        // }
         if (params.fullName) {
             findCondition = {
                 $or: [
