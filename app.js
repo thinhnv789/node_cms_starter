@@ -6,7 +6,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var io = require('socket.io')();
 var ioEvents = require('./socket/server')(io);
-// var sharedsession = require("express-socket.io-session");
+var appRouters = require('./routes/index');
+var apiRouters = require('./apis/routers/index');
 var logger = require('morgan');
 var dotenv = require('dotenv');
 var mongoose = require('mongoose');
@@ -18,13 +19,6 @@ var expressValidator = require('express-validator');
  * Read .env
  */
 dotenv.config({path: './env/.env'});
-
-const indexRouter = require('./routes/index');
-const accountRouter = require('./routes/account');
-const authRouter = require('./routes/auth');
-const loginManagerRouter = require('./routes/login-manager');
-
-const apiMediaRouter = require('./apis/routers/media');
 
 var app = express();
 
@@ -71,13 +65,11 @@ app.use((req, res, next) => {
 app.use('/libs', express.static(__dirname + '/node_modules/'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/account', accountRouter);
-app.use('/auth', authRouter);
-app.use('/login-manager', loginManagerRouter);
+// App routers
+appRouters(app);
 
 // Api routers
-app.use('/api/media', apiMediaRouter);
+apiRouters(app);
 
 // Connect to mongo database
 mongoose.connect(process.env.MONGO_DB, function(err, db) {

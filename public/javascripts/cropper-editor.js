@@ -238,7 +238,8 @@ class CropperEditor {
 
                 let imageCrop = document.createElement('img');
                 imageCrop.id = 'image-crop-' + this.config.name;
-                imageCrop.className = 'image-crop'
+                imageCrop.className = 'image-crop';
+                imageCrop.style = 'max-width: 100%; max-height: ' + (window.innerHeight - 180) + 'px';
                 imageCrop.src = URL.createObjectURL(file);
                 cropperEditorMain.appendChild(imageCrop);
 

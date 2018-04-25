@@ -7,9 +7,9 @@ const mongoose = require('mongoose');
  * @name userModel
  */
 const userSchema = new mongoose.Schema({
-  userName: { type: String, required: true, unique: true },
+  userName: { type: String, required: true, unique: true, index: true },
   firstName: {type: String},
-  lastName: {type: String},
+  lastName: {type: String, index: true},
   gender: {type: Number}, // 1: male, 2: female, 3: other
   birthDay: {type: Date},
   avatar: {type: String},

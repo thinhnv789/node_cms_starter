@@ -1,15 +1,16 @@
-var express = require('express');
-var router = express.Router();
+var appRouters = function(app) {
+    const dashboardRouter = require('./dashboard');
+    const accountRouter = require('./account');
+    const authRouter = require('./auth');
+    const loginManagerRouter = require('./login-manager');
+    const logRouter = require('./log');
 
-const DashboardController = require('../controllers/DashboardController');
+    app.use('/', dashboardRouter);
+    app.use('/account', accountRouter);
+    app.use('/auth', authRouter);
+    app.use('/login-manager', loginManagerRouter);
+    app.use('/log', logRouter);
+}
 
-const passport = require('../middleware/passport');
+module.exports = appRouters;
 
-/* GET home page. */
-router.get('/', passport.isAuthenticated, DashboardController.getIndex);
-
-router.get('/cropper', passport.isAuthenticated, DashboardController.getCropper);
-
-router.get('/init-user', DashboardController.getInitUser);
-
-module.exports = router;

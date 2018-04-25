@@ -1,5 +1,7 @@
 const platform = require('platform');
+const dns = require('dns');
 
+const LogModel = require('./../models/Log');
 const UserModel = require('./../models/User');
 const LoginManager = require('./../models/LoginManager');
 
@@ -20,6 +22,21 @@ exports.getLogin = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {
     try {
+        /**
+         * Create new log
+         */
+        let newLog = new LogModel();
+        newLog.title = 'Đăng nhập';
+        newLog.ip = req.ip;
+        newLog.referrer = req.get('Referrer');
+        newLog.collectionRef = UserModel.collection.name;
+        newLog.data = JSON.stringify(req.body);
+
+        console.log('newLog', newLog);
+        newLog.save();
+
+        /**=== End log ===**/
+
         UserModel.findOne({
             userName: req.body.userName
         }, (err, user) => {

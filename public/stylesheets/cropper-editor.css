@@ -19,7 +19,7 @@
     display: table;
     vertical-align: middle;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.68);
+    background: rgba(0, 0, 0, 0.88);
 }
 .cropper-editor-popup-container {
     position: relative;
@@ -32,7 +32,7 @@
     /* width: 400px;
     height: 400px; */
     position: relative;
-    max-width: 60%;
+    max-width: 68%;
     padding: 50px 0;
     margin: auto;
 }

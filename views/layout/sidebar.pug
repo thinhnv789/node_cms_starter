@@ -69,18 +69,36 @@ aside.main-sidebar
 							i.fa.fa-circle-o
 							|  Level One
 			li.header
-				i.fa.fa-cogs &nbsp;&nbsp;HỆ THỐNG
-			li(class=(current == 'setting') ? 'active' : null)
-				a(href='/setting')
-					i.fa.fa-cog
-					span Cài đặt
-			li(class=(current == 'account') ? 'active' : null)
-				a(href='/account')
-					i.fa.fa-users
+				i.fa.fa-cogs &nbsp;&nbsp;SETTINGS
+			li.treeview(class=(current == 'account' || current == 'login-manager') ? 'active' : null)
+				a(href='#')
+					i.fa.fa-user
 					span Tài khoản
-			li(class=(current == 'login-manager') ? 'active' : null)
-				a(href='/login-manager')
-					i.fa.fa-laptop
-					span Quản lý thiết bị
+					span.pull-right-container
+						i.fa.fa-angle-left.pull-right
+				ul.treeview-menu
+					li(class=(current == 'account') ? 'active' : null)
+						a(href='/account')
+							i.fa.fa-users
+							span Danh sách
+					li(class=(current == 'login-manager') ? 'active' : null)
+						a(href='/login-manager')
+							i.fa.fa-laptop
+							span Quản lý thiết bị
+			li.treeview(class=(current == 'config' || current == 'log') ? 'active' : null)
+				a(href='#')
+					i.fa.fa-cog
+					span Hệ thống
+					span.pull-right-container
+						i.fa.fa-angle-left.pull-right
+				ul.treeview-menu
+					li(class=(current == 'setting') ? 'active' : null)
+						a(href='/config')
+							i.fa.fa-cog
+							span Cấu hình
+					li(class=(current == 'log') ? 'active' : null)
+						a(href='/log')
+							i.fa.fa-history
+							span Lịch sử
 	// /.sidebar
 // ===============================================

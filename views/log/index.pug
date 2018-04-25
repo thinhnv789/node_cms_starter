@@ -1,0 +1,82 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/stylesheets/data-table.css')
+block javascripts
+    script(src='/javascripts/select-option.js')
+    script(src='/javascripts/data-table.js')
+    script(type='text/javascript').
+        //- document.addEventListener("DOMContentLoaded", function(event) {
+            let dataTable = new DataTable({
+                selector: '#login-nanager',
+                urlFilter: '/login-manager/search',
+                //- columns: ['STT', 'firstName', 'lastName', 'userName', 'email'],
+                filters: [
+                    //- {
+                    //-     name: 'fullName',
+                    //-     type: 'text'
+                    //- },
+                    //- {
+                    //-     name: 'email',
+                    //-     type: 'text'
+                    //- },
+                    //- {
+                    //-     name: 'statusDisplay',
+                    //-     type: 'select',
+                    //-     key: 'value',
+                    //-     value: 'text',
+                    //-     placeholder: 'Trạng thái',
+                    //-     style: 'width:140px;',
+                    //-     search: false,
+                    //-     options: [
+                    //-         {
+                    //-             value: 1,
+                    //-             text: 'Đã kích hoạt'
+                    //-         },
+                    //-         {
+                    //-             value: 0,
+                    //-             text: 'Chưa kích hoạt'
+                    //-         }
+                    //-     ]
+                    //- }
+                ]
+            })
+        //- });
+
+
+block content
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Log lịch sử
+      ol.breadcrumb
+        li
+          a(href='/')
+            i.fa.fa-dashboard
+            |  Dashboard
+        li.active Log
+    // Main content
+    section.content
+        .row
+            .col-lg-12.col-md-12
+                .x-scroll(style='width: 100%; overflow-x: auto;overflow-y: hidden;')
+                    table#login-nanager.table.table-responsive.table-border
+                        thead
+                            tr
+                                th(name='STT') STT
+                                th(name='title') Title
+                                th(name='ip') Ip Address
+                                th(name='referrer') Referrer
+                                th(name='collectionRef') Collection
+                                th(name='createdAt') Logged Time
+                        tbody 
+                            each dt, i in data
+                                tr
+                                    td #{i+1}
+                                    td #{dt.title}
+                                    td #{dt.ip}
+                                    td #{dt.referrer}
+                                    td #{dt.collectionRef}
+                                    td #{moment(dt.createdAt).format('DD-MM-YYYY H:m:s')}
+
