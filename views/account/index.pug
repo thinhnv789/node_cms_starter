@@ -92,6 +92,6 @@ block content
                                             em.fa.fa-eye
                                         a.user-action.btn.btn-success(href='/account/edit/' + dt._id)
                                             em.fa.fa-pencil
-                                        button.user-action.btn.btn-danger(onclick='return confirmDelete("Bạn có chắc chắn muốn xóa tài khoản này không?", "/account/delete/' + dt._id + '")')
+                                        button.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Bạn có chắc chắn muốn xóa tài khoản này không?", "/account/delete/' + dt._id + '")')
                                             em.fa.fa-trash
 

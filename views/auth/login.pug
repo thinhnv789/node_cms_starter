@@ -25,38 +25,38 @@ html
     #login-overlay.modal-dialog
         .modal-content
             .modal-header
-                h4#myModalLabel.modal-title.text-center Đăng nhập hệ thống quản trị
+                h4#myModalLabel.modal-title.text-center #{i18n.__('LOGIN_TITLE')}
             .modal-body
                 .row
                     .col-lg-6.col-md-6
                         .well
                             form#loginForm(method='POST', action='/auth/login', novalidate='novalidate')
                                 .form-group
-                                    label.control-label(for='userName') Tên đăng nhập
-                                    input#username.form-control(type='text', name='userName', value='', required='', title='Please enter you username', placeholder='example@gmail.com')
+                                    label.control-label(for='userName') #{i18n.__('USER_NAME')}
+                                    input#username.form-control(type='text', name='userName', value='', required='', placeholder=i18n.__('PLACEHOLDER_USERNAME'))
                                     span.help-block
                                 .form-group
-                                    label.control-label(for='password') Mật khẩu
-                                    input#password.form-control(type='password', name='password', value='', required='', title='Please enter your password')
+                                    label.control-label(for='password') #{i18n.__('PASSWORD')}
+                                    input#password.form-control(type='password', name='password', value='', required='', placeholder=i18n.__('PLACEHOLDER_PASSWORD'))
                                     span.help-block
                                 #loginErrorMsg.alert.alert-error.hide Wrong username og password
                                 .checkbox
                                     label
                                         input#remember(type='checkbox', name='remember')
-                                        |  Lưu đăng nhập
-                                button.btn.btn-success.btn-block(type='submit') Đăng nhập
-                                a.btn.btn-default.btn-block(href='/auth/forgot-password') Quên mật khẩu
+                                        |  #{i18n.__('REMEMBER_ME')}
+                                button.btn.btn-success.btn-block(type='submit') #{i18n.__('LOGIN')}
+                                a.btn.btn-default.btn-block(href='/auth/forgot-password') #{i18n.__('FORGOT_PASSWORD')}
                     .col-lg-6.col-md-6
                         p.lead.text-center
-                            | Đăng nhập bằng
+                            | #{i18n.__('SOCIAL_LOGIN_TITLE')}
                             //- span.text-success FREE
                         ul.list-unstyled.text-center(style='line-height: 2')
                             li.btn.btn-default.fb-login(style='background:#3b5998;color:#fff;width:100%;max-width:222px;text-align:left;')
                                 span.fa.fa-facebook.text-success(style='color:#fff;width:20px;')
-                                |  Đăng nhập bằng Facebook
+                                |  #{i18n.__('LOGIN_FACEBOOK')}
                             li.btn.btn-default.gplus-login(style='background:#e74c3d;color:#fff;width:100%;max-width:222px;text-align:left;margin-top:5px;')
                                 span.fa.fa-google-plus.text-success(style='color:#fff;width:20px;')
-                                |  Đăng nhập bằng Google
+                                |  #{i18n.__('LOGIN_GOOGLE')}
                             
                         //-     a(href='/read-more/')
                         //-         u Read more

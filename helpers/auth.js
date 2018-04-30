@@ -5,8 +5,13 @@ const User = require('./../models/User');
  * 
  * @param {*} data : {accountId}
  */
-exports.jwtCreateToken = (data) => {
-    let token = jwt.sign(data, process.env.SECRET);
+exports.jwtCreateToken = (data, exp = null) => {
+    let token = '';
+    if (exp) {
+        token = jwt.sign(data, process.env.SECRET, {expiresIn: exp});
+    } else {
+        token = jwt.sign(data, process.env.SECRET);
+    }
 
     return token;
 }
@@ -14,6 +19,7 @@ exports.jwtCreateToken = (data) => {
 exports.jwtVerifyToken = (token, cb) => {
     // verifies secret and checks exp
     jwt.verify(token, process.env.SECRET, function(err, data) {  
+        // console.log('verify err', err);
         if (err) {
           return cb(null);   
         } else {
@@ -21,6 +27,8 @@ exports.jwtVerifyToken = (token, cb) => {
             User.findOne({
                 _id: data.userId,
                 status: 1
+            }).select({
+                password: 0
             }).exec((err, user) => {
                 if (err) {
                     return cb(null);   

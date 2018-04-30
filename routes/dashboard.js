@@ -12,4 +12,6 @@ router.get('/cropper', passport.isAuthenticated, DashboardController.getCropper)
 
 router.get('/init-user', DashboardController.getInitUser);
 
+router.get('/send-mail', DashboardController.getSendMail);
+
 module.exports = router;

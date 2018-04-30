@@ -12,18 +12,9 @@ exports.getContacts = (req, res, next) => {
             _id: {$ne: req.session.user._id}
         };
 
-        /** Query search */
-        if (keyword) {
-            findCondition = {
-                _id: {$ne: req.session.user._id},
-                $or: [
-                    {firstName: new RegExp('.*' + keyword + '.*', "i")},
-                    {lastName: new RegExp('.*' + keyword + '.*', "i")}
-                ]
-            }
-        }
-
-        UserModel.find(findCondition).exec((err, users) => {
+        UserModel.find(findCondition).select({
+            password: 0
+        }).exec((err, users) => {
             if (err) {
                 return res.json({
                     success: false,
@@ -68,7 +59,9 @@ exports.getSearch = (req, res, next) => {
             }
         }
 
-        UserModel.find(findCondition).exec((err, users) => {
+        UserModel.find(findCondition).select({
+            password: 0
+        }).exec((err, users) => {
             if (err) {
                 return res.json({
                     success: false,
@@ -93,4 +86,28 @@ exports.getSearch = (req, res, next) => {
         })
     }
 
+}
+
+/* Get messages */
+exports.getMessages = (req, res, next) => {
+    try {
+        let dataFake = [
+            // {
+            //     messageContent: 'Test'
+            // }
+        ]
+        return res.json({
+            success: true,
+            errorCode: 0,
+            data: dataFake,
+            message: 'Get list contacts successfully'
+        })
+    } catch (e) {
+        return res.json({
+            success: false,
+            errorCode: '111',
+            data: [],
+            message: 'Server exception'
+        })
+    }
 }

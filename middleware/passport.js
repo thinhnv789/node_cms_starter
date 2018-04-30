@@ -1,7 +1,3 @@
-const jwt = require('jsonwebtoken');
-
-const Auth = require('./../helpers/auth');
-
 const publicUrl = '/auth/login';
 /**
  * Login Required middleware.

@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var i18n = require('i18n');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -22,7 +23,6 @@ dotenv.config({path: './env/.env'});
 
 var app = express();
 
-global.io = io;
 app.locals.moment = require('moment');
 
 // view engine setup
@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(expressValidator());
 // Use session
-var appSession = session({
+var sessionMiddleware = session({
   resave: true,
   rolling : true,
   saveUninitialized: false,
@@ -46,19 +46,36 @@ var appSession = session({
     autoReconnect: true,
   })
 });
-app.use(appSession);
-// io.use(sharedsession(appSession, {
-//   autoSave:true
-// }));
+io.use(function(socket, next) {
+  sessionMiddleware(socket.request, socket.request.res, next);
+});
+app.use(sessionMiddleware);
 app.use(flash());
+
+// Set locales
+i18n.configure({
+  locales:['en', 'vi'],
+  // defaultLocale: 'en',
+  directory: __dirname + '/locales'
+});
 
 // Pass user login to client
 app.use((req, res, next) => {
+  // express helper for natively supported engines
+  if (process.env.I18N_LANG) {
+    try {
+      i18n.setLocale(process.env.I18N_LANG);   
+    } catch (e) {
+
+    }
+  }
+  global.i18n = i18n;
+  res.locals.i18n = i18n;
+ 
   // Allow request from all domain
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.locals.user = req.session.user;
-  global.io.session = req.session;
-  global.io.sessionID = req.sessionID;
+  
   next();
 });
 
@@ -96,5 +113,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+global.io = io;
 
 module.exports = app;

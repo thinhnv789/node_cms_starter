@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+
 const UserModel = require('./../models/User');
 const SessionModel = require('./../models/Session');
 
@@ -47,3 +49,26 @@ exports.getInitUser = (req, res, next) => {
        
     }
 };
+
+exports.getSendMail = (req, res, next) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'dev.thinhnv@gmail.com',
+            pass: 'dev@2018'
+        }
+    });
+    const mailOptions = {
+        from: 'dev.thinhnv@gmail.com', // sender address
+        to: 'thinhnv.vnu@gmail.com, thinhnv@vega.com.vn', // list of receivers
+        subject: 'Subject of your email', // Subject line
+        html: '<p>Your html here</p>'// plain text body
+	};
+	transporter.sendMail(mailOptions, function (err, info) {
+		if(err)
+		  console.log(err)
+		else
+		  console.log(info);
+	});
+	res.json('ttt');
+}

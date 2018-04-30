@@ -1,0 +1,19 @@
+{
+    "LOGIN_TITLE": "Đăng nhập hệ thống quản trị",
+    "SOCIAL_LOGIN_TITLE": "Đăng nhập bằng",
+    "LOGIN_FACEBOOK": "Đăng nhập bằng Facebook",
+    "LOGIN_GOOGLE": "Đăng nhập bằng Google",
+    "USER_NAME": "Tên đăng nhập",
+    "PLACEHOLDER_USERNAME": "example@gmail.com",
+    "PASSWORD": "Mật khẩu",
+    "PLACEHOLDER_PASSWORD": "Nhập mật khẩu",
+    "REMEMBER_ME": "Lưu đăng nhập",
+    "LOGIN": "Đăng nhập",
+    "FORGOT_PASSWORD": "Quên mật khẩu",
+    "REQUIRED_LOGIN": "Yêu cầu đăng nhập",
+    "ER_QUERY_DB": "Lỗi truy vấn cơ sở dữ liệu",
+    "ER_USER_NOT_FOUND": "Người dùng không tồn tại",
+    "ER_WRONG_USERNAME_OR_PASSWORD": "Tên đăng nhập hoặc mật khẩu không đúng",
+    "LOGIN_SUCCESSFULLY": "Đăng nhập thành công",
+    "GET_USERINFO_SUCCESSFULLY": "Lấy dữ liệu thông tin cá nhân thành công"
+}

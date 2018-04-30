@@ -1,13 +1,9 @@
 /*
 * Connect socket
 */
-const socket = io('http://192.168.1.68:8008');
+const socket = io('http://localhost:8008');
 
-socket.on('connect', () => {
-    socket.on('hello', (data) => {
-        console.log(data);
-    });
-    
+socket.on('connect', () => {    
     /* Notification member login */
     socket.on('member_login', (data) => {
         let notiSound = new Audio('/sounds/notification.mp3');
