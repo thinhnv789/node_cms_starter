@@ -1,0 +1,35 @@
+mixin form(data={})
+    .box.box-warning
+        form.form-horizontal(role='form', method='POST', action=data._id ? '/news-category/update/' + data._id : '/news-category/create')
+            .box-header.with-border
+                h3.box-title Thông tin danh mục bài viết
+            // /.box-header
+            .box-body
+                .form-group
+                    .col-lg-6.col-md-6(class=errors && errors.categoryName && 'has-error')
+                        label.control-label Tên danh mục
+                        input.form-control(type='text', name='categoryName', value=(data.categoryName || ''), placeholder='Nhập tên danh mục')
+                        if errors && errors.categoryName
+                            span.help-block #{errors.categoryName.msg}
+                    .col-lg-6.col-md-6(class=errors && errors.slug && 'has-error')
+                        label.control-label Slug
+                        input.form-control(type='text', name='slug', value=(data.slug || ''), placeholder='category-slug')
+                        if errors && errors.slug
+                            span.help-block #{errors.slug.msg}
+                .form-group
+                    .col-lg-12.col-md-12(class=errors && errors.description && 'has-error')
+                        label.control-label Mô tả
+                        textarea.form-control(rows=3, name='description', value=(data.description || ''), placeholder='Mô tả')
+                        if errors && errors.description
+                            span.help-block #{errors.description.msg}
+                .form-group
+                    .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
+                        label.control-label Trạng thái
+                        select#select-status.form-control(name='status')
+                            option(value=1, selected=(data.status == 1) ? true : false) Public
+                            option(value=0, selected=(data.status == 0) ? true : false) Draft
+                // Box footer        
+            .box-footer
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-check
+                    |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}

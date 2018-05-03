@@ -25,7 +25,7 @@ mixin form(data={})
         .form-group
             .col-lg-6.col-md-6(class=errors && errors.avatar && 'has-error')
                 label.control-label(style='display: block;text-align: left;') Ảnh đại diện
-                input#cropper-avatar.form-control(type='file', name='avatar', value=(data.avatar || null), imgSrc=(data.avatar ? (process.env.MEDIA_URL + '/images/avatar/thumb/' + data.avatar) : null))
+                input#cropper-avatar.form-control(type='file', name='avatar', value=(data.avatar || null), imgSrc=(data.avatar ? (data.avatarUrl) : null))
                 if errors && errors.avatar
                     span.help-block #{errors.avatar.msg}
             .col-lg-6.col-md-6(class=errors && errors.birthDay && 'has-error')

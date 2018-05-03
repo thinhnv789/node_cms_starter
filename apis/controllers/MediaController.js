@@ -107,5 +107,59 @@ exports.postUploadImage = (req, res, next) => {
             message: 'Upload failed' + JSON.stringify(e)
         })
     }
+}
 
+// Upload image
+exports.postFroalaUploadImage = (req, res, next) => {
+    let folder = req.params.folder;
+    let uploadDir = '/media/images/froala/' + folder + '/';
+	const fs = require('fs'), FroalaEditor = require('wysiwyg-editor-node-sdk/lib/froalaEditor.js');
+    
+    /**
+     * Create folder if not exist
+     */
+    let dirs = uploadDir.split('/'), dir='.';
+
+    for (let i=0; i<dirs.length; i++) {
+        if (dirs[i]) {
+            dir += '/' + dirs[i];
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
+        }
+    }
+    
+    // Store image.
+    FroalaEditor.Image.upload(req, '..' + uploadDir, function(err, data) {
+        // Return data.
+        if (err) {
+            return res.send(JSON.stringify(err));
+        }
+        try {
+            data.link = data.link.replace('../media', process.env.MEDIA_URL);
+        } catch (e) {
+            
+        }
+        res.send(data);
+    });
+}
+
+// Get all images from folder
+exports.getFroalaLoadImages = (req, res, next) => {
+    let folder = req.params.folder;
+	const imageFolder = './media/images/froala/' + folder + '/';
+	const fs = require('fs');
+
+	let data = [];
+	
+	fs.readdir(imageFolder, (err, files) => {
+		files.forEach(file => {
+			data.push({
+				url: process.env.MEDIA_URL + '/images/froala/' + folder + '/' + file,
+				thumb: process.env.MEDIA_URL + '/images/froala/' + folder + '/' + file,
+				tag: file
+			})
+		});
+		res.send(data);
+	})
 }

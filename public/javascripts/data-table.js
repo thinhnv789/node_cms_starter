@@ -64,6 +64,8 @@ class DataTable {
     generateInputText(data) {
         let searchItem = document.createElement('div');
         searchItem.className = 'search-item input-text';
+        // searchItem.style = 'width:' + this.selector.innerWidth();
+        // console.log('data', data);
 
         let inputSearch = document.createElement('input');
         inputSearch.className = 'form-control';

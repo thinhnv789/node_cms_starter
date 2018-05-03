@@ -55,7 +55,7 @@ socket.on('connect', () => {
 
     /* Event owner message */
     socket.on('owner_message', (data) => {
-        let partner = data.to;
+        let partner = data.recipient;
         let chatBox = document.getElementById('chatbox-' + partner._id);
 
         if (!chatBox) {

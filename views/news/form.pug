@@ -1,0 +1,65 @@
+mixin form(data={})
+    .box.box-warning
+        form.form-horizontal(role='form', method='POST', action=data._id ? '/news/update/' + data._id : '/news/create')
+            .box-header.with-border
+                h3.box-title Thông tin bài viết
+            // /.box-header
+            .box-body
+                ul.nav.nav-tabs
+                    li.active
+                        a(data-toggle='tab', href='#main') Thông tin chính
+                    li
+                        a(data-toggle='tab', href='#seo') Thuộc tính SEO
+                .tab-content
+                    #main.tab-pane.fade.in.active
+                        .form-group
+                            .col-lg-6.col-md-6(class=errors && errors.title && 'has-error')
+                                label.control-label Tiêu đề
+                                input.form-control(type='text', name='title', value=(data.title || ''), placeholder='Nhập tiêu đề bài viết')
+                                if errors && errors.title
+                                    span.help-block #{errors.title.msg}
+                            .col-lg-6.col-md-6(class=errors && errors.slug && 'has-error')
+                                label.control-label Slug
+                                input.form-control(type='text', name='slug', value=(data.slug || ''), placeholder='seo-friendly-url')
+                                if errors && errors.slug
+                                    span.help-block #{errors.slug.msg}
+                        .form-group
+                            .col-lg-12.col-md-12(class=errors && errors.images && 'has-error')
+                                label.control-label(style='display: block;text-align: left;') Ảnh
+                                input#cropper-images.form-control(type='file', name='images', value=(data.images || null), imgSrc=(data.images ? (data.imagesUrl) : null))
+                                if errors && errors.images
+                                    span.help-block #{errors.images.msg}
+                        .form-group
+                            .col-lg-12.col-md-12(class=errors && errors.brief && 'has-error')
+                                label.control-label Tóm tắt
+                                textarea.form-control(rows=3, name='brief', value=(data.brief || ''), placeholder='Nội dung tóm tắt')
+                                if errors && errors.brief
+                                    span.help-block #{errors.brief.msg}
+                        .form-group
+                            .col-lg-12.col-md-12(class=errors && errors.content && 'has-error')
+                                label.control-label Nội dung (*)
+                                textarea#news-content.form-control(rows=3, name='content', value=(data.content || ''), placeholder='Nội dung bài viết')
+                                if errors && errors.content
+                                    span.help-block #{errors.content.msg}
+                        .form-group
+                            .col-lg-6.col-md-6(class=errors && errors.publishAt && 'has-error')
+                                label.control-label Thời gian public
+                                .input-group.date
+                                    .input-group-addon
+                                        i.fa.fa-calendar
+                                    input#publishAt.form-control(type='text', name='publishAt', value=(moment(data.publishAt).format('DD-MM-YYYY') || ''))
+                                if errors && errors.pblishAt
+                                    span.help-block #{errors.publishAt.msg}
+                            .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
+                                label.control-label Trạng thái
+                                select#select-status.form-control(name='status')
+                                    option(value=1, selected=(data.status == 1) ? true : false) Public
+                                    option(value=0, selected=(data.status == 0) ? true : false) Draft
+                    #seo.tab-pane.fade
+                        h3 Menu 1
+                        p Some content in menu 1.
+                // Box footer        
+            .box-footer
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-check
+                    |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}

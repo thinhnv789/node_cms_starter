@@ -59,28 +59,38 @@ block content
     // Main content
     section.content
         .row
-            .col-lg-12.col-md-12
-                .x-scroll(style='width: 100%; overflow-x: auto;overflow-y: hidden;')
-                    table#login-nanager.table.table-responsive.table-border
-                        thead
-                            tr
-                                th(name='STT') STT
-                                th(name='fullName') Full Name
-                                th(name='userName') UserName
-                                th(name='platform') Platform
-                                th(name='os') OS
-                                th(name='createdAt') Loggedin Time
-                                th.text-center(name='actions', actions={delete: '/login-manager/delete'}) Hành động
-                        tbody 
-                            each dt, i in data
+            .col-xs-12
+                .box
+                    .box-header
+                        h3.box-title 
+                        .box-tools
+                            .input-group.input-group-sm(style='width: 150px;')
+                                input.form-control.pull-right(type='text', name='table_search', placeholder='Search')
+                                .input-group-btn
+                                    button.btn.btn-default(type='submit')
+                                        i.fa.fa-search
+                    // /.box-header
+                    .box-body.table-responsive.no-padding
+                        table#table-accounts.table.table-hover
+                            thead
                                 tr
-                                    td #{i+1}
-                                    td #{dt.fullName}
-                                    td #{dt.userName}
-                                    td #{dt.platform}
-                                    td #{dt.os}
-                                    td #{moment(dt.createdAt).format('DD-MM-YYYY H:m:s')}
-                                    td.text-center
-                                        button.user-action.btn.btn-danger(onclick='return confirmDelete("Đăng xuất tài khoản trên thiết bị này ?", "/login-manager/delete/' + dt._id + '")')
-                                            em.fa.fa-trash
+                                    th(name='STT') STT
+                                    th(name='fullName') Full Name
+                                    th(name='userName') UserName
+                                    th(name='platform') Platform
+                                    th(name='os') OS
+                                    th(name='createdAt') Loggedin Time
+                                    th.text-center(name='actions', actions={delete: '/login-manager/delete'}) Hành động
+                            tbody
+                                each dt, i in data
+                                    tr
+                                        td #{i+1}
+                                        td #{dt.fullName}
+                                        td #{dt.userName}
+                                        td #{dt.platform}
+                                        td #{dt.os}
+                                        td #{moment(dt.createdAt).format('DD-MM-YYYY H:m:s')}
+                                        td.text-center
+                                            button.user-action.btn.btn-danger(onclick='return confirmDelete("Đăng xuất tài khoản trên thiết bị này ?", "/login-manager/delete/' + dt._id + '")')
+                                                em.fa.fa-trash
 

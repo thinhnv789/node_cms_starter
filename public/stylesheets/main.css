@@ -1,3 +1,10 @@
+/* crack froala editor lib*/
+.fr-box .show-placeholder div:first-child a, .fr-box .fr-wrapper div:first-child a {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+
 /* Css confirm action*/
 .content-center {
   position: fixed;

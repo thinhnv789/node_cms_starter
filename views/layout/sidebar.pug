@@ -27,47 +27,21 @@ aside.main-sidebar
 				a(href='/')
 					i.fa.fa-dashboard
 					span Dashboard
-			li.treeview
+			li.treeview(class=(current == 'news-category' || current == 'news') ? 'active' : null)
 				a(href='#')
-					i.fa.fa-share
-					span Multilevel
+					i.fa.fa-newspaper-o
+					span Tin tức
 					span.pull-right-container
 						i.fa.fa-angle-left.pull-right
 				ul.treeview-menu
-					li
-						a(href='#')
-							i.fa.fa-circle-o
-							|  Level One
-					li.treeview
-						a(href='#')
-							i.fa.fa-circle-o
-							|  Level One
-							span.pull-right-container
-								i.fa.fa-angle-left.pull-right
-						ul.treeview-menu
-							li
-								a(href='#')
-									i.fa.fa-circle-o
-									|  Level Two
-							li.treeview
-								a(href='#')
-									i.fa.fa-circle-o
-									|  Level Two
-									span.pull-right-container
-										i.fa.fa-angle-left.pull-right
-								ul.treeview-menu
-									li
-										a(href='#')
-											i.fa.fa-circle-o
-											|  Level Three
-									li
-										a(href='#')
-											i.fa.fa-circle-o
-											|  Level Three
-					li
-						a(href='#')
-							i.fa.fa-circle-o
-							|  Level One
+					li(class=(current == 'news-category') ? 'active' : null)
+						a(href='/news-category')
+							i.fa.fa-briefcase
+							|  Danh mục
+					li(class=(current == 'news') ? 'active' : null)
+						a(href='/news')
+							i.fa.fa-pencil
+							|  Bài viết
 			li.header
 				i.fa.fa-cogs &nbsp;&nbsp;SETTINGS
 			li.treeview(class=(current == 'account' || current == 'login-manager') ? 'active' : null)

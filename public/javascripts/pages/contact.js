@@ -118,7 +118,7 @@ function createNewChatBox(data) {
                  * Emit message to socket server
                  */
                 let dataSend = {
-                    to: data,
+                    recipient: data,
                     messageContent: messVal
                 }
                 console.log('dataSend', dataSend);
@@ -144,7 +144,7 @@ function createNewChatBox(data) {
              * Emit message to socket server
              */
             let dataSend = {
-                to: data,
+                recipient: data,
                 messageContent: value
             }
             console.log('dataSend', dataSend);

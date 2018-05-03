@@ -1,6 +1,7 @@
 const platform = require('platform');
 const Auth = require('./../helpers/auth');
 const LoginManager = require('./../models/LoginManager');
+const Message = require('./../models/Message');
 
 var ioAuthenticatedEvents = function(io, socket) {
     /* User join to personal room */
@@ -28,16 +29,33 @@ var ioAuthenticatedEvents = function(io, socket) {
      * Event send message
      */
     socket.on('send_message', (data) => {
-        data.sender = socket.user;
+        try {
+            data.sender = socket.user;
 
-        console.log('dataSend', data);
+            try {
+                io.to(data.recipient._id).emit('message', data);
+            } catch (e) {
+                console.log('err send message');
+            }
 
-        io.to(data.to._id).emit('message', data);
+            /**
+             * Event send message to sender
+             */
+            io.to(socket.user._id).emit('owner_message', data);
 
-        /**
-         * Event send message to sender
-         */
-        io.to(socket.user._id).emit('owner_message', data);
+            /**
+             * Save message to database
+             */
+            let newMessageData = {
+                sender: data.sender._id,
+                recipient: data.recipient._id,
+                messageContent: data.messageContent
+            }
+            let newMessage = new Message(newMessageData);
+            newMessage.save();
+        } catch (e) {
+
+        }
     })
 
     /**
