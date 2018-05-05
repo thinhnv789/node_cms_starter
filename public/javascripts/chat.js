@@ -1,7 +1,7 @@
 /*
 * Connect socket
 */
-const socket = io('http://localhost:8008');
+const socket = io('https://localhost:8008');
 
 socket.on('connect', () => {    
     /* Notification member login */
@@ -47,7 +47,7 @@ socket.on('connect', () => {
         let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
 
         if (chatboxContainer) {
-            let inboxMessageItem = createInboxMessage({...partner, ...{messageContent: data.messageContent}})
+            let inboxMessageItem = createInboxMessage(data)
             chatboxContainer.appendChild(inboxMessageItem);
             chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
         }
@@ -73,7 +73,7 @@ socket.on('connect', () => {
         let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
 
         if (chatboxContainer) {
-            let ownerMessageItem = createOwnerMessage(data.messageContent)
+            let ownerMessageItem = createOwnerMessage(data)
             chatboxContainer.appendChild(ownerMessageItem);
             chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
         }

@@ -76,6 +76,7 @@ var ioEvents = function(io) {
         let user = {};
         if (socket.request.session && socket.request.session.user) {
             user = socket.request.session.user;
+            console.log('user', user);
             if (user && user._id) {
                 socket.user = user;
                 ioAuthenticatedEvents(io, socket);

@@ -12,6 +12,14 @@ const Auth = require('../helpers/auth');
  * @param {*} res 
  * @param {*} next 
  */
+exports.getFacebook = (req, res, next) => {
+    try {
+        return res.send('<script>window.fbAsyncInit=function(){FB.init({appId:"100366074171779",cookie:!0,xfbml:!0,version:"v3.0"}),FB.AppEvents.logPageView()},function(e,n,t){var o,i=e.getElementsByTagName(n)[0];e.getElementById(t)||((o=e.createElement(n)).id=t,o.src="https://connect.facebook.net/en_US/sdk.js",i.parentNode.insertBefore(o,i))}(document,"script","facebook-jssdk");</script>')
+    } catch (e) {
+        console.log(e);
+    }
+}
+ 
 exports.getLogin = (req, res, next) => {
     try {
         res.render('auth/login');

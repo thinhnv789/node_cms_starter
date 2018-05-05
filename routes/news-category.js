@@ -3,21 +3,21 @@ var router = express.Router();
 
 const NewsCategoryController = require('../controllers/NewsCategoryController');
 
-const passport = require('../middleware/passport');
+const middleware = require('../middleware/appMiddleware');
 
 /* GET news categories page. */
-router.get('/', passport.isAuthenticated, NewsCategoryController.getIndex);
+router.get('/', middleware.isAuthenticated, NewsCategoryController.getIndex);
 
-// router.get('/search', passport.isAuthenticated, NewsController.getSearch);
+router.get('/search', middleware.isAuthenticated, NewsCategoryController.getSearch);
 
-router.get('/create', passport.isAuthenticated, NewsCategoryController.getCreate);
+router.get('/create', middleware.isAuthenticated, NewsCategoryController.getCreate);
 
-router.post('/create', passport.isAuthenticated, NewsCategoryController.postCreate);
+router.post('/create', middleware.isAuthenticated, NewsCategoryController.postCreate);
 
-// router.get('/edit/:accountId', passport.isAuthenticated, NewsController.getEdit);
+router.get('/edit/:categoryId', middleware.isAuthenticated, NewsCategoryController.getEdit);
 
-// router.post('/update/:accountId', passport.isAuthenticated, NewsController.postUpdate);
+router.post('/update/:categoryId', middleware.isAuthenticated, NewsCategoryController.postUpdate);
 
-// router.get('/delete/:accountId', passport.isAuthenticated, NewsController.getDelete);
+router.get('/delete/:categoryId', middleware.isAuthenticated, NewsCategoryController.getDelete);
 
 module.exports = router;

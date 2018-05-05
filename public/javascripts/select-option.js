@@ -77,7 +77,9 @@ class SelectOption {
                 selectChoices.classList.toggle('select-hidden');
                 selectInstate.classList.toggle('show-choices');
                 /* Trigger select on change */
-                // this.selector.onchange({target: this.selector});
+                console.log('this.selector', this.selector);
+                if (typeof this.selector.onchange === 'function')
+                    this.selector.onchange();
             }.bind(this);
 
             if (options[i].value === this.selector.value) {

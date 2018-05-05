@@ -1,4 +1,5 @@
 function createInboxMessage(data) {
+    console.log('dataIb', data);
     let inboxMessage = document.createElement('div');
     inboxMessage.className = 'inbox-message';
 
@@ -7,7 +8,7 @@ function createInboxMessage(data) {
     inboxMessage.appendChild(avatar);
 
     let avatarImg = document.createElement('img');
-    avatarImg.src = 'http://192.168.1.68:8018/images/avatar/thumb/avatar-1524639778103.png';
+    avatarImg.src = data.sender.avatarUrl;
     avatar.appendChild(avatarImg);
 
     let messContent = document.createElement('div');
@@ -32,27 +33,29 @@ function createOwnerMessage(data) {
 
     let messContentText = document.createElement('div');
     messContentText.className = 'message-content-text';
-    messContentText.textContent = data;
+    messContentText.textContent = data.messageContent;
     messContent.appendChild(messContentText);
 
     return ownerMessage;
 }
 
 function createNewChatBox(data) {
+    let page = 1, pageSize = 10;
+
     let chatBox = document.createElement('div');
     chatBox.className = 'chatbox';
     chatBox.id = 'chatbox-' + data._id;
 
     let boxHeader = document.createElement('div');
     boxHeader.className = 'box-header';
-    boxHeader.onclick = function() {
-        chatBox.classList.toggle('chatbox-hidden');
-    }
     chatBox.appendChild(boxHeader);
 
     let partnerName = document.createElement('div');
     partnerName.className = 'partner-name';
     partnerName.textContent = data.fullName;
+    partnerName.onclick = function() {
+        chatBox.classList.toggle('chatbox-hidden');
+    };
     boxHeader.appendChild(partnerName);
 
     let toolBar = document.createElement('div');
@@ -64,6 +67,7 @@ function createNewChatBox(data) {
     hideBox.onclick = function() {
         if (!chatBox.classList.contains('chatbox-hidden')) {
             // chatBox.classList.add('chatbox-hidden');
+            chatBox.classList.add('chatbox-hidden');
         }
     }
     toolBar.appendChild(hideBox);
@@ -90,7 +94,65 @@ function createNewChatBox(data) {
 
     let boxContainer = document.createElement('div');
     boxContainer.className = 'box-container';
+    boxContainer.onscroll = function() {
+        /* Load more message */
+        if (boxContainer.scrollTop <= 0) {
+            page = page + 1;
+            /* Request server get old messages */
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    let dataRes = JSON.parse(xhr.responseText);
+
+                    if (dataRes && dataRes.success) {
+                        let messageData = dataRes.data;
+                        let currentHtml = boxContainer.innerHTML;
+                        boxContainer.innerHTML = '';
+                        for (let i=messageData.length - 1; i>=0; i--) {
+                            // Inbox message
+                            if (messageData[i].sender._id === data._id) {
+                                let messItem = createInboxMessage(messageData[i]);
+                                boxContainer.appendChild(messItem);
+                            } else {
+                                let messItem = createOwnerMessage(messageData[i]);
+                                boxContainer.appendChild(messItem);
+                            }
+                        }
+                        boxContainer.innerHTML += currentHtml;
+                        // boxContainer.scrollTop = boxContainer.scrollHeight;
+                    }
+                }
+            }
+            xhr.open('GET', '/api/chat/messages/' + data._id + '?page=' + page + '&pageSize=' + pageSize, true);
+            xhr.send(null);
+        }
+    }
     chatBox.appendChild(boxContainer);
+
+    /* Request server get old messages */
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            let dataRes = JSON.parse(xhr.responseText);
+
+            if (dataRes && dataRes.success) {
+                let messageData = dataRes.data;
+                for (let i=messageData.length - 1; i>=0; i--) {
+                    // Inbox message
+                    if (messageData[i].sender._id === data._id) {
+                        let messItem = createInboxMessage(messageData[i]);
+                        boxContainer.appendChild(messItem);
+                    } else {
+                        let messItem = createOwnerMessage(messageData[i]);
+                        boxContainer.appendChild(messItem);
+                    }
+                }
+                boxContainer.scrollTop = boxContainer.scrollHeight;
+            }
+        }
+    }
+    xhr.open('GET', '/api/chat/messages/' + data._id + '?page=' + page + '&pageSize=' + pageSize, true);
+    xhr.send(null);
 
     /** */
     // let inboxMessItem = createInboxMessage({});

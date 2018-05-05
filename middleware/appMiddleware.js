@@ -1,3 +1,5 @@
+const passport = require('passport');
+const { Strategy: FacebookStrategy } = require('passport-facebook');
 const publicUrl = '/auth/login';
 /**
  * Login Required middleware.

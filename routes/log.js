@@ -3,12 +3,12 @@ var router = express.Router();
 
 const LogController = require('../controllers/LogController');
 
-const passport = require('../middleware/passport');
+const middleware = require('../middleware/appMiddleware');
 
 /* GET account page. */
-router.get('/', passport.isAuthenticated, LogController.getIndex);
+router.get('/', middleware.isAuthenticated, LogController.getIndex);
 
-router.get('/search', passport.isAuthenticated, LogController.getSearch);
+router.get('/search', middleware.isAuthenticated, LogController.getSearch);
 
 // router.get('/delete/:loginId', passport.isAuthenticated, LoginManagerController.getDelete);
 

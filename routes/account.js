@@ -3,21 +3,21 @@ var router = express.Router();
 
 const AccountController = require('../controllers/AccountController');
 
-const passport = require('../middleware/passport');
+const middleware = require('../middleware/appMiddleware');
 
 /* GET account page. */
-router.get('/', passport.isAuthenticated, AccountController.getIndex);
+router.get('/', middleware.isAuthenticated, AccountController.getIndex);
 
-router.get('/search', passport.isAuthenticated, AccountController.getSearch);
+router.get('/search', middleware.isAuthenticated, AccountController.getSearch);
 
-router.get('/create', passport.isAuthenticated, AccountController.getCreate);
+router.get('/create', middleware.isAuthenticated, AccountController.getCreate);
 
-router.post('/create', passport.isAuthenticated, AccountController.postCreate);
+router.post('/create', middleware.isAuthenticated, AccountController.postCreate);
 
-router.get('/edit/:accountId', passport.isAuthenticated, AccountController.getEdit);
+router.get('/edit/:accountId', middleware.isAuthenticated, AccountController.getEdit);
 
-router.post('/update/:accountId', passport.isAuthenticated, AccountController.postUpdate);
+router.post('/update/:accountId', middleware.isAuthenticated, AccountController.postUpdate);
 
-router.get('/delete/:accountId', passport.isAuthenticated, AccountController.getDelete);
+router.get('/delete/:accountId', middleware.isAuthenticated, AccountController.getDelete);
 
 module.exports = router;

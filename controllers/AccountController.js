@@ -9,7 +9,7 @@ const moment = require('moment');
  */
 exports.getIndex = (req, res, next) => {
     try {
-        UserModel.find({}).exec((err, users) => {
+        UserModel.find({}).sort('-createdAt').exec((err, users) => {
             res.render('account/index', {
                 title: 'Danh sách tài khoản',
                 current: 'account',

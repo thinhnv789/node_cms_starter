@@ -3,6 +3,7 @@ class DataTable {
         this.config = config;
         this.columns = [];
         this.columnEls = {};
+        this.filterEls = {};
         this.searchParams = {};
         this.page = 1;
         this.pageSize = 10;
@@ -26,29 +27,35 @@ class DataTable {
             // tableSelector.parentNode.insertBefore(btnFilter, tableSelector);
 
             let columns = document.querySelectorAll(selector + ' thead tr th');
+            let thead = document.querySelector(selector + ' thead');
+            let trFilter = document.createElement('tr');
+            trFilter.className = 'filter-row';
 
             for(let i=0; i<columns.length; i++) {
                 let name = columns[i].getAttribute('name');
                 this.columns.push(name);
                 this.columnEls[name] = columns[i];
+
+                let tdFilter = document.createElement('td');
+                trFilter.appendChild(tdFilter);
+                this.filterEls[name] = tdFilter;
             }
+            thead.appendChild(trFilter);
         }
     }
 
     generateSearch (selector, filters) {
         for (let i=0; i<filters.length; i++) {
             let filter = filters[i];
-            console.log('filters', filters);
-            console.log('columnEls', this.columnEls);
             if (filter && filter.name) {
                 switch(filter.type) {
                     case 'text':
                         let filterText = this.generateInputText(filter);
-                        this.columnEls[filter.name].appendChild(filterText);
+                        this.filterEls[filter.name].appendChild(filterText);
                         break;
                     case 'select':
                         let filterSelect = this.generateInputSelectOption(filter);
-                        this.columnEls[filter.name].appendChild(filterSelect);
+                        this.filterEls[filter.name].appendChild(filterSelect);
                         new SelectOption({
                             selector: '#filter_' + filter.name,
                             search: filter.search
@@ -71,6 +78,7 @@ class DataTable {
         inputSearch.className = 'form-control';
         inputSearch.type = 'text';
         inputSearch.name = data.name;
+
         inputSearch.onkeydown = function(e) {
             let keyCode = e.keyCode;
 
@@ -129,8 +137,9 @@ class DataTable {
         }
 
         searchItem.appendChild(inputSearch);
-
+        console.log('inputSearch', inputSearch);
         inputSearch.onchange = function() {
+            console.log('testtt');
             this.searchParams[data.name] = inputSearch.value;
             
             let queryParams = '';

@@ -6,7 +6,15 @@
 
 var app = require('../app');
 var debug = require('debug')('cms-starter:server');
-var http = require('http');
+// var http = require('http');
+var https = require('https');
+const path = require('path');
+const fs = require('fs');
+// console.log(path.resolve(__dirname, '/cert/cert.pem'));
+const options = {
+  cert: fs.readFileSync(path.resolve(__dirname, '../cert/cert.pem')),
+  key: fs.readFileSync(path.resolve(__dirname, '../cert/key.pem'))
+}
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +27,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 
 /**
  * Create chat server

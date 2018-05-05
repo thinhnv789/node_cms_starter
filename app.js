@@ -15,11 +15,17 @@ var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('express-flash');
 var expressValidator = require('express-validator');
+var passport = require('passport');
 
 /**
  * Read .env
  */
 dotenv.config({path: './env/.env'});
+
+/**
+ * Passport configuration.
+ */
+const passportConfig = require('./config/passport');
 
 var app = express();
 
@@ -50,6 +56,8 @@ io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
 app.use(sessionMiddleware);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
 
 // Set locales
@@ -75,7 +83,6 @@ app.use((req, res, next) => {
   // Allow request from all domain
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.locals.user = req.session.user;
-  
   next();
 });
 

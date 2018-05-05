@@ -22,6 +22,7 @@
 .select-instate {
     position: relative;
     cursor: pointer;
+    z-index: 100;
 }
 .select-instate .triangle {
     position: absolute;

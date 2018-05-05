@@ -11,6 +11,9 @@
     text-align: left;
     vertical-align: top;
 }
+.t-data-table thead .filter-row {
+    background: #eeeded;
+}
 .t-data-table thead tr th.text-center {
     text-align: center;
 }

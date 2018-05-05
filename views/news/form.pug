@@ -26,19 +26,30 @@ mixin form(data={})
                         .form-group
                             .col-lg-12.col-md-12(class=errors && errors.images && 'has-error')
                                 label.control-label(style='display: block;text-align: left;') Ảnh
-                                input#cropper-images.form-control(type='file', name='images', value=(data.images || null), imgSrc=(data.images ? (data.imagesUrl) : null))
+                                input#cropper-images.form-control(type='file', name='images', value=(data.images || null), imgSrc=(data.imageSrc ? (data.imageSrc) : (data.imageUrls ? data.imageUrls : null)))
                                 if errors && errors.images
                                     span.help-block #{errors.images.msg}
                         .form-group
+                            .col-lg-6.col-md-6(class=errors && errors.category && 'has-error')
+                                label.control-label Danh mục
+                                select#select-category.form-control(rows=3, name='category')
+                                    option(value='') Chọn danh mục
+                                    if (data.categories)
+                                        each c in data.categories
+                                            option(value=c._id, selected=(JSON.stringify(data.category) === JSON.stringify(c._id) ? true: false)) #{c.categoryName}
+                                        
+                                if errors && errors.category
+                                    span.help-block #{errors.category.msg}
+                        .form-group
                             .col-lg-12.col-md-12(class=errors && errors.brief && 'has-error')
                                 label.control-label Tóm tắt
-                                textarea.form-control(rows=3, name='brief', value=(data.brief || ''), placeholder='Nội dung tóm tắt')
+                                textarea.form-control(rows=3, name='brief', value=(data.brief || ''), placeholder='Nội dung tóm tắt') #{data.brief}
                                 if errors && errors.brief
                                     span.help-block #{errors.brief.msg}
                         .form-group
                             .col-lg-12.col-md-12(class=errors && errors.content && 'has-error')
                                 label.control-label Nội dung (*)
-                                textarea#news-content.form-control(rows=3, name='content', value=(data.content || ''), placeholder='Nội dung bài viết')
+                                textarea#news-content.form-control(rows=3, name='content', value=(data.content || ''), placeholder='Nội dung bài viết') #{data.content}
                                 if errors && errors.content
                                     span.help-block #{errors.content.msg}
                         .form-group

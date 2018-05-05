@@ -19,9 +19,19 @@ class CropperEditor {
             let imgValue = this.selector.getAttribute('value'),
             imgSrc = this.selector.getAttribute('imgSrc');
             if (imgValue) {
-                /* Create thumb preview */
-                let thumbPreview = this.genThumbPreview(imgSrc, imgValue);
-                this.customFileUpload.parentNode.insertBefore(thumbPreview, this.customFileUpload);
+                if (this.config.isMultiple) {
+                    let imgs = JSON.parse(imgValue);
+                    let imgSrcs = JSON.parse(imgSrc);
+                    for (let i=0; i<imgs.length; i++) {
+                        /* Create thumb preview */
+                        let thumbPreview = this.genThumbPreview(imgSrcs[i], imgs[i]);
+                        this.customFileUpload.parentNode.insertBefore(thumbPreview, this.customFileUpload);    
+                    }
+                } else {
+                    /* Create thumb preview */
+                    let thumbPreview = this.genThumbPreview(imgSrc, imgValue);
+                    this.customFileUpload.parentNode.insertBefore(thumbPreview, this.customFileUpload);
+                }
             }
         }
     }
@@ -42,7 +52,7 @@ class CropperEditor {
         uploadFileIcon.className = 'fa fa-cloud-upload';
         customFileUpload.appendChild(uploadFileIcon);
 
-        if (this.selector.getAttribute('value')) {
+        if (this.selector.getAttribute('value') && !this.config.isMultiple) {
             customFileUpload.style = 'display: none';
         }
 
@@ -57,7 +67,7 @@ class CropperEditor {
         cropperInputImage.type = 'text';
 
         if (this.config.isMultiple) {
-            cropperInputImage.value = JSON.stringify([]);
+            cropperInputImage.value = '';//JSON.stringify([]);
         } else {
             cropperInputImage.value = this.selector.getAttribute('value') || '';
         }

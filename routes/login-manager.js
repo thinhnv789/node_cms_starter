@@ -3,13 +3,13 @@ var router = express.Router();
 
 const LoginManagerController = require('../controllers/LoginManagerController');
 
-const passport = require('../middleware/passport');
+const middleware = require('../middleware/appMiddleware');
 
 /* GET account page. */
-router.get('/', passport.isAuthenticated, LoginManagerController.getIndex);
+router.get('/', middleware.isAuthenticated, LoginManagerController.getIndex);
 
-router.get('/search', passport.isAuthenticated, LoginManagerController.getSearch);
+router.get('/search', middleware.isAuthenticated, LoginManagerController.getSearch);
 
-router.get('/delete/:loginId', passport.isAuthenticated, LoginManagerController.getDelete);
+router.get('/delete/:loginId', middleware.isAuthenticated, LoginManagerController.getDelete);
 
 module.exports = router;

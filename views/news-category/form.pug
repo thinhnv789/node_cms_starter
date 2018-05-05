@@ -19,7 +19,7 @@ mixin form(data={})
                 .form-group
                     .col-lg-12.col-md-12(class=errors && errors.description && 'has-error')
                         label.control-label Mô tả
-                        textarea.form-control(rows=3, name='description', value=(data.description || ''), placeholder='Mô tả')
+                        textarea.form-control(rows=3, name='description', value=(data.description || ''), placeholder='Mô tả') #{data.description}
                         if errors && errors.description
                             span.help-block #{errors.description.msg}
                 .form-group

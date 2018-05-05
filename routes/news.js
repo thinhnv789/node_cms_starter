@@ -3,21 +3,21 @@ var router = express.Router();
 
 const NewsController = require('../controllers/NewsController');
 
-const passport = require('../middleware/passport');
+const middleware = require('../middleware/appMiddleware');
 
 /* GET news page. */
-router.get('/', passport.isAuthenticated, NewsController.getIndex);
+router.get('/', middleware.isAuthenticated, NewsController.getIndex);
 
-// router.get('/search', passport.isAuthenticated, NewsController.getSearch);
+router.get('/search', middleware.isAuthenticated, NewsController.getSearch);
 
-router.get('/create', passport.isAuthenticated, NewsController.getCreate);
+router.get('/create', middleware.isAuthenticated, NewsController.getCreate);
 
-router.post('/create', passport.isAuthenticated, NewsController.postCreate);
+router.post('/create', middleware.isAuthenticated, NewsController.postCreate);
 
-// router.get('/edit/:accountId', passport.isAuthenticated, NewsController.getEdit);
+router.get('/edit/:newsId', middleware.isAuthenticated, NewsController.getEdit);
 
-// router.post('/update/:accountId', passport.isAuthenticated, NewsController.postUpdate);
+router.post('/update/:newsId', middleware.isAuthenticated, NewsController.postUpdate);
 
-// router.get('/delete/:accountId', passport.isAuthenticated, NewsController.getDelete);
+router.get('/delete/:newsId', middleware.isAuthenticated, NewsController.getDelete);
 
 module.exports = router;

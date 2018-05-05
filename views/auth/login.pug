@@ -52,11 +52,13 @@ html
                             //- span.text-success FREE
                         ul.list-unstyled.text-center(style='line-height: 2')
                             li.btn.btn-default.fb-login(style='background:#3b5998;color:#fff;width:100%;max-width:222px;text-align:left;')
-                                span.fa.fa-facebook.text-success(style='color:#fff;width:20px;')
-                                |  #{i18n.__('LOGIN_FACEBOOK')}
+                                a(href='/auth/facebook', style='color: #fff;text-decoration: none;')
+                                    span.fa.fa-facebook.text-success(style='color:#fff;width:20px;')
+                                    |  #{i18n.__('LOGIN_FACEBOOK')}
                             li.btn.btn-default.gplus-login(style='background:#e74c3d;color:#fff;width:100%;max-width:222px;text-align:left;margin-top:5px;')
-                                span.fa.fa-google-plus.text-success(style='color:#fff;width:20px;')
-                                |  #{i18n.__('LOGIN_GOOGLE')}
+                                a(href='/auth/google', style='color: #fff;text-decoration: none;')
+                                    span.fa.fa-google-plus.text-success(style='color:#fff;width:20px;')
+                                    |  #{i18n.__('LOGIN_GOOGLE')}
                             
                         //-     a(href='/read-more/')
                         //-         u Read more

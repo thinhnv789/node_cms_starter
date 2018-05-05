@@ -1,3 +1,4 @@
+const NewsCategoryModel = require('./../models/NewsCategory');
 const NewsModel = require('./../models/News');
 
 const moment = require('moment');
@@ -9,57 +10,52 @@ const moment = require('moment');
  */
 exports.getIndex = (req, res, next) => {
     try {
-        NewsModel.find({}).exec((err, news) => {
-            res.render('news/index', {
-                title: 'Tin tức',
-                current: 'news',
-                data: news
-            });
+        NewsModel.find({}).populate('category').exec((err, news) => {
+            NewsCategoryModel.find({}).select({_id: 1, categoryName: 1}).exec((err, categories) => {
+                res.render('news/index', {
+                    title: 'Tin tức',
+                    current: 'news',
+                    data: news,
+                    categories: categories
+                });
+            })
         })
     } catch (e) {
        return res.redirect('404');
     }
 };
 
-// exports.getSearch = (req, res, next) => {
-//     try {
-//         let params = req.query;
-//         let findCondition = {};
+exports.getSearch = (req, res, next) => {
+    try {
+        let params = req.query;
+        let findCondition = {};
 
-//         /** Query search */
-//         if (params.fullName) {
-//             findCondition = {
-//                 $or: [
-//                     {firstName: new RegExp('.*' + params.fullName + '.*', "i")},
-//                     {lastName: new RegExp('.*' + params.fullName + '.*', "i")}
-//                 ]
-//             }
-//         }
-//         if (params.userName) {
-//             findCondition.userName = new RegExp('.*' + params.userName + '.*', "i");
-//         }
-//         if (params.email) {
-//             findCondition.email = new RegExp('.*' + params.email + '.*', "i");
-//         }
-//         if (params.statusDisplay) {
-//             findCondition.status = params.statusDisplay;
-//         }
+        /** Query search */
+        if (params.title) {
+            findCondition.title = new RegExp('.*' + params.title + '.*', "i");
+        }
+        if (params.category) {
+            findCondition.category = params.category;
+        }
+        if (params.statusDisplay) {
+            findCondition.status = params.statusDisplay;
+        }
 
-//         UserModel.find(findCondition).exec((err, users) => {
-//             return res.json({
-//                 success: true,
-//                 errorCode: 0,
-//                 data: users
-//             })
-//         })
-//     } catch (e) {
-//         return res.json({
-//             success: true,
-//             errorCode: 0,
-//             data: []
-//         })
-//     }
-// }
+        NewsModel.find(findCondition).exec((err, news) => {
+            return res.json({
+                success: true,
+                errorCode: 0,
+                data: news
+            })
+        })
+    } catch (e) {
+        return res.json({
+            success: true,
+            errorCode: 0,
+            data: []
+        })
+    }
+}
 
 /**
  * 
@@ -67,11 +63,15 @@ exports.getIndex = (req, res, next) => {
  * @param {*} res 
  * @param {*} next 
  */
-exports.getCreate = (req, res, next) => {
+exports.getCreate = async (req, res, next) => {
     try {
+        let categories = await NewsCategoryModel.find({});
         res.render('news/create', {
             title: 'Viết bài',
             current: 'news',
+            data: {
+                categories: categories
+            }
         });
     } catch (e) {
        
@@ -80,45 +80,58 @@ exports.getCreate = (req, res, next) => {
 
 exports.postCreate = (req, res, next) => {
     try {
-        req.checkBody('firstName', 'Họ không được để trống').notEmpty();
-        req.checkBody('lastName', 'Tên không được để trống').notEmpty();
-        req.checkBody('userName', 'Tên đăng nhập không được để trống').notEmpty();
-        req.checkBody('email', 'Email không được để trống').notEmpty();
-        req.assert('email', 'Email không đúng').isEmail();
-        // req.checkBody('avatar', 'Ảnh đại diện không được để trống').notEmpty();
-        req.checkBody('password', 'Mật khẩu ít nhất 6 kí tự').len(6);
-        req.checkBody('confirmPassword', 'Mật khẩu không trùng khớp').equals(req.body.password);
-        req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+        req.checkBody('title', 'Vui lòng nhập tiêu đề bài viết').notEmpty();
+        req.checkBody('category', 'Chọn danh mục cho bài viết').notEmpty();
+        req.checkBody('content', 'Nội dung bài viết không được để trống').notEmpty();
+        req.checkBody('images', 'Đăng ảnh cho bài viết').notEmpty().len(2);
         
-        req.getValidationResult().then(function (errors) {
+        req.getValidationResult().then(async function (errors) {
             if (!errors.isEmpty()) {
                 var errors = errors.mapped();
-    
-                res.render('account/create', {
-                    title: 'Tạo tài khoản',
+
+                if (req.body.images) {
+                    let imageSrc = [], images = JSON.parse(req.body.images);
+                    for (let i=0; i<images.length; i++) {
+                        imageSrc.push(process.env.MEDIA_URL + '/images/news/thumb/' + images[i]);
+                    }
+
+                    req.body.imageSrc = JSON.stringify(imageSrc);
+                }
+                let categories = await NewsCategoryModel.find({});
+
+                res.render('news/create', {
+                    title: 'Viết bài',
                     errors: errors,
-                    data: req.body
+                    data: {...req.body, ...{categories: categories}}
                 });
             } else {
                 try {
                     let postData = {
-                        firstName: req.body.firstName || null,
-                        lastName: req.body.lastName || null,
-                        userName: req.body.userName || null,
-                        email: req.body.email || null,
-                        avatar: req.body.avatar || null,
-                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : null,
-                        password: req.body.password || null,
-                        status: req.body.status || 0
+                        title: req.body.title || null,
+                        slug: req.body.slug || null,
+                        category: req.body.category || null,
+                        brief: req.body.brief || null,
+                        images: req.body.images || null,
+                        content: req.body.content || null,
+                        publishAt: req.body.publishAt ? moment(req.body.publishAt, 'DDMMYYYY').format() : null,
+                        tags: req.body.tags || null,
+                        status: req.body.status || 0,
+                        createdBy: req.session.user._id
                     }
                     let newRecord = new NewsModel(postData);
                     newRecord.save((err, result) => {
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Vui lòng thử lại');
-                            return res.redirect('/account');
+                            return res.redirect('/news');
                         }
-                        req.flash('success', 'Tài khoản ' + result.email + ' đã được tạo');
-                        return res.redirect('/account');
+                        NewsCategoryModel.findById(result.category).exec((err, category) => {
+                            if (category) {
+                                category.news.push(result._id);
+                                category.save();
+                            }
+                        });
+                        req.flash('success', 'Bài viết ' + result.title + ' đã được tạo');
+                        res.redirect('/news');
                     });
                 } catch (e) {
 
@@ -138,11 +151,13 @@ exports.postCreate = (req, res, next) => {
  */
 exports.getEdit = (req, res, next) => {
     try {
-        NewsModel.findById(req.params.accountId).exec((err, account) => {
-            res.render('account/edit', {
-                title: 'Sửa thông tin tài khoản',
-                current: 'account',
-                data: account
+        NewsModel.findById(req.params.newsId).exec((err, news) => {
+            NewsCategoryModel.find({}).exec((err, categories) => {
+                res.render('news/edit', {
+                    title: 'Chỉnh sửa bài viết',
+                    current: 'news',
+                    data: Object.assign(news, {categories: categories})
+                });
             });
         });
     } catch (e) {
@@ -152,39 +167,58 @@ exports.getEdit = (req, res, next) => {
 
 exports.postUpdate = (req, res, next) => {
     try {
-        req.checkBody('firstName', 'Họ không được để trống').notEmpty();
-        req.checkBody('lastName', 'Tên không được để trống').notEmpty();
-        req.checkBody('userName', 'Tên đăng nhập không được để trống').notEmpty();
-        req.checkBody('email', 'Email không được để trống').notEmpty();
-        req.assert('email', 'Email không đúng').isEmail();
-        req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+        req.checkBody('title', 'Vui lòng nhập tiêu đề bài viết').notEmpty();
+        req.checkBody('category', 'Chọn danh mục cho bài viết').notEmpty();
+        req.checkBody('content', 'Nội dung bài viết không được để trống').notEmpty();
+        req.checkBody('images', 'Đăng ảnh cho bài viết').notEmpty().len(2);
         
         req.getValidationResult().then(function (errors) {
             if (!errors.isEmpty()) {
                 var errors = errors.array();
                 
                 req.flash('errors', errors[0].msg);
-                return res.redirect('/account/edit/' + req.params.accountId);
+                return res.redirect('/news/edit/' + req.params.newsId);
             } else {
                 try {
-                    console.log('req', req.body.birthDay);
-                    let newData = {
-                        firstName: req.body.firstName || null,
-                        lastName: req.body.lastName || null,
-                        userName: req.body.userName || null,
-                        email: req.body.email || null,
-                        avatar: req.body.avatar || null,
-                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : null,
-                        status: req.body.status || 0
-                    }
-                    console.log('tt', newData);
-                    NewsModel.updateOne({_id: req.params.accountId}, newData).exec((err) => {
-                        if (err) {
+                    NewsModel.findById(req.params.newsId).exec((err, news) => {
+                        if (err || !news) {
                             req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
-                            res.redirect('/account/edit/' + req.params.accountId);
+                            res.redirect('/news/edit/' + req.params.newsId);
                         } else {
-                            req.flash('success', 'Cập nhật thành công');
-                            res.redirect('/account');
+                            let oldCategoryId = news.category;
+                            let newData = {
+                                title: req.body.title || news.title,
+                                slug: req.body.slug || news.slug,
+                                category: req.body.category || news.category,
+                                brief: req.body.brief || news.brief,
+                                images: req.body.images || news.images,
+                                content: req.body.content || news.content,
+                                publishAt: req.body.publishAt ? moment(req.body.publishAt, 'DDMMYYYY').format() : moment(news.publishAt, 'DDMMYYYY').format(),
+                                tags: req.body.tags || news.tags,
+                                status: req.body.status || news.status,
+                                updatedBy: req.session.user._id
+                            }
+
+                            news = Object.assign(news, newData);
+                            news.save((err) => {
+                                NewsCategoryModel.findById(news.category).exec((err, category) => {
+                                    if (category) {
+                                        category.news.pull(news._id);
+                                        category.news.push(news._id);
+                                        category.save();
+                                    }
+                                });
+                                if (news.category !== oldCategoryId) {
+                                    NewsCategoryModel.findById(oldCategoryId).exec((err, oldCategory) => {
+                                        if (oldCategory) {
+                                            oldCategory.news.pull(news._id);
+                                            oldCategory.save();
+                                        }
+                                    })
+                                }
+                                req.flash('success', 'Cập nhật thành công');
+                                res.redirect('/news');
+                            });
                         }
                     });
                 } catch (e) {
@@ -197,18 +231,31 @@ exports.postUpdate = (req, res, next) => {
     }
 }
 
-// exports.getDelete = (req, res, next) => {
-//     try {
-//         UserModel.deleteOne({_id: req.params.accountId}).exec((err) => {
-//             if (err) {
-//                 req.flash('errors', 'Tài khoản không tồn tại');
-//                 return res.redirect('/account');
-//             }
-//             req.flash('success', 'Xóa tài khoản thành công');
-//             return res.redirect('/account');
-//         })
-//     } catch (e) {
-//         req.flash('errors', 'Có lỗi xảy ra');
-//         return res.redirect('/account');
-//     }
-// }
+exports.getDelete = (req, res, next) => {
+    try {
+        NewsModel.findById(req.params.newsId).exec((err, newsDelete) => {
+            if (err || !newsDelete) {
+                req.flash('errors', 'Không tìm thấy dữ liệu');
+                return res.redirect('/news');
+            }
+            let categoryId = newsDelete.category, newsIdDelete = newsDelete._id;
+            newsDelete.remove((err) => {
+                if (err) {
+                    req.flash('errors', 'Không tìm thấy dữ liệu');
+                    return res.redirect('/news');
+                }
+                NewsCategoryModel.findById(categoryId).exec((err, category) => {
+                    if (category) {
+                        category.news.pull(newsIdDelete);
+                        category.save();
+                    }
+                })
+                req.flash('success', 'Xóa bài viết thành công');
+                return res.redirect('/news');
+            })
+        })
+    } catch (e) {
+        req.flash('errors', 'Có lỗi xảy ra');
+        return res.redirect('/news');
+    }
+}
