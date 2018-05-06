@@ -20,4 +20,8 @@ router.post('/update/:accountId', middleware.isAuthenticated, AccountController.
 
 router.get('/delete/:accountId', middleware.isAuthenticated, AccountController.getDelete);
 
+router.get('/profile', middleware.isAuthenticated, AccountController.getProfile);
+
+router.post('/update-profile', middleware.isAuthenticated, AccountController.postUpdateProfile);
+
 module.exports = router;

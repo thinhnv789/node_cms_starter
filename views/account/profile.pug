@@ -1,0 +1,103 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/libs/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css')
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/libs/cropperjs/dist/cropper.min.css')
+    link(rel='stylesheet', href='/stylesheets/cropper-editor.css')
+block javascripts
+    script(type='text/javascript', src='/libs/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js')
+    script(type='text/javascript', src='/javascripts/select-option.js')
+    script(type='text/javascript', src='/libs/cropperjs/dist/cropper.min.js')
+    script(type='text/javascript', src='/javascripts/cropper-editor.js')
+    script(type='text/javascript').
+        $('#birthDay').datetimepicker({
+            format: 'dd-mm-yyyy',
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+        let cropperEditor1 = new CropperEditor({
+            selector: '#cropper-avatar',
+            upload_url: '/api/media/upload-image',
+            uploadDir: '/images/avatar',
+            prefixFileName: 'avatar',
+            isMultiple: false,
+            thumbWidth: 400,
+            thumbHeight: 400,
+            clientOptions: {
+                viewMode: 1,
+                dragMode: 'move',
+                cropBoxResizable: false
+            }
+        });
+        new SelectOption({
+            selector: '#select-status',
+            search: false
+        })
+
+block content
+    include ./form
+    // Content Header (Page header)
+    section.content-header
+        h1
+            | Trang cá nhân
+        ol.breadcrumb
+            li
+                a(href='/')
+                    i.fa.fa-dashboard
+                    |  Dashboard
+            li.active Trang cá nhân
+    // Main content
+    section.content
+        .row
+            .col-lg-12.col-md-12
+                .box.box-warning
+                    .box-header.with-border
+                        h3.box-title Thông tin tài khoản
+                    // /.box-header
+                    .box-body
+                        form.form-horizontal(role='form', method='POST', action='/account/update-profile')
+                            .form-group
+                                .col-lg-12.col-md-12.text-center(class=errors && errors.avatar && 'has-error')
+                                    input#cropper-avatar.form-control(type='file', name='avatar', value=(data.avatar || null), imgSrc=(data.avatar ? (data.avatarUrl) : null))
+                                    if errors && errors.avatar
+                                        span.help-block #{errors.avatar.msg}
+                            .form-group
+                                .col-lg-6.col-md-6(class=errors && errors.firstName && 'has-error')
+                                    label.control-label Họ
+                                    input.form-control(type='text', name='firstName', value=(data.firstName || ''), placeholder='VD: Nguyễn Viết')
+                                    if errors && errors.firstName
+                                        span.help-block #{errors.firstName.msg}
+                                .col-lg-6.col-md-6(class=errors && errors.lastName && 'has-error')
+                                    label.control-label Tên
+                                    input.form-control(type='text', name='lastName', value=(data.lastName || ''), placeholder='VD: Thịnh')
+                                    if errors && errors.lastName
+                                        span.help-block #{errors.lastName.msg}
+                            .form-group
+                                .col-lg-6.col-md-6(class=errors && errors.userName && 'has-error')
+                                    label.control-label Tên đăng nhập
+                                    input.form-control(type='text', name='userName', value=(data.userName || ''), placeholder='VD: Thinhnv')
+                                    if errors && errors.userName
+                                        span.help-block #{errors.userName.msg}
+                                .col-lg-6.col-md-6(class=errors && errors.email && 'has-error')
+                                    label.control-label Email
+                                    input.form-control(type='text', name='email', value=(data.email || ''), placeholder='VD: example@gmail.com')
+                                    if errors && errors.email
+                                        span.help-block #{errors.email.msg}
+                            .form-group
+                                .col-lg-6.col-md-6(class=errors && errors.birthDay && 'has-error')
+                                    label.control-label Ngày sinh
+                                    .input-group.date
+                                        .input-group-addon
+                                            i.fa.fa-calendar
+                                        input#birthDay.form-control(type='text', name='birthDay', value=(moment(data.birthDay).format('DD-MM-YYYY') || ''))
+                                    if errors && errors.birthDay
+                                        span.help-block #{errors.birthDay.msg}
+                            // Box footer        
+                            .box-footer
+                                button.btn.btn-success(type='submit')
+                                    i.fa.fa-check
+                                    |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}

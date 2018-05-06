@@ -42,14 +42,13 @@ socket.on('connect', () => {
             }
         } else {
             chatBox.style = 'display: inline-block';
-        }
+            let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
 
-        let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
-
-        if (chatboxContainer) {
-            let inboxMessageItem = createInboxMessage(data)
-            chatboxContainer.appendChild(inboxMessageItem);
-            chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
+            if (chatboxContainer) {
+                let inboxMessageItem = createInboxMessage(data)
+                chatboxContainer.appendChild(inboxMessageItem);
+                chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
+            }
         }
     });
 

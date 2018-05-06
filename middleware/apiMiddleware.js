@@ -20,7 +20,6 @@ exports.isAuthenticated = (req, res, next) => {
         }
 
         Auth.jwtVerifyToken(token, (user) => {
-            console.log('user', user);
             if (user) {
                 req.session.user = user;
                 return next();

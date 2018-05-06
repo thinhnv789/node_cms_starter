@@ -13,4 +13,7 @@ router.get('/search', apiMiddleware.isAuthenticated, ChatController.getSearch);
 /* API get list messages */
 router.get('/messages/:partnerId', apiMiddleware.isAuthenticated, ChatController.getMessages);
 
+/* API get list recent messages */
+router.get('/recent-messages', apiMiddleware.isAuthenticated, ChatController.getRecentMessages);
+
 module.exports = router;

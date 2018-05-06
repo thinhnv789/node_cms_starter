@@ -42,6 +42,10 @@ aside.main-sidebar
 						a(href='/news')
 							i.fa.fa-pencil
 							|  Bài viết
+			li(class=(current == 'group-chat') ? 'active' : null)
+				a(href='/group-chat')
+					i.fa.fa-comment
+					span Nhóm Chat
 			li.header
 				i.fa.fa-cogs &nbsp;&nbsp;SETTINGS
 			li.treeview(class=(current == 'account' || current == 'login-manager') ? 'active' : null)

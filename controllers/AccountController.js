@@ -212,3 +212,67 @@ exports.getDelete = (req, res, next) => {
         return res.redirect('/account');
     }
 }
+
+exports.getProfile = async (req, res, next) => {
+    try {
+        let data = await UserModel.findById(req.session.user._id);
+
+        if (!data) {
+            req.flash('errors', 'Không tìm thấy dữ liệu');
+            return res.redirect('/');
+        }
+        res.render('account/profile', {
+            data: data
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+exports.postUpdateProfile = (req, res, next) => {
+    try {
+        req.checkBody('firstName', 'Họ không được để trống').notEmpty();
+        req.checkBody('lastName', 'Tên không được để trống').notEmpty();
+        req.checkBody('userName', 'Tên đăng nhập không được để trống').notEmpty();
+        req.checkBody('email', 'Email không được để trống').notEmpty();
+        req.assert('email', 'Email không đúng').isEmail();
+        req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+        
+        req.getValidationResult().then(function (errors) {
+            if (!errors.isEmpty()) {
+                var errors = errors.array();
+                
+                req.flash('errors', errors[0].msg);
+                return res.redirect('/account/profile');
+            } else {
+                try {
+                    UserModel.findById(req.session.user._id).exec((err, user) => {
+                        if (err || !user) {
+                            req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                            res.redirect('/account/profile');
+                        } else {
+                            let newData = {
+                                firstName: req.body.firstName || user.firstName,
+                                lastName: req.body.lastName || user.lastName,
+                                userName: req.body.userName || user.userName,
+                                email: req.body.email || user.email,
+                                avatar: req.body.avatar || user.avatar,
+                                birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : moment(user.birthDay, 'DDMMYYYY').format(),
+                                status: user.status
+                            }
+                            user = Object.assign(user, newData);
+                            user.save((err) => {
+                                req.flash('success', 'Cập nhật thành công');
+                                res.redirect('/account/profile');
+                            })
+                        }
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+    } catch (e) {
+       console.log(e);
+    }
+}

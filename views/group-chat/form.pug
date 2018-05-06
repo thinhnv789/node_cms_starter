@@ -1,0 +1,29 @@
+mixin form(data={})
+    .box.box-warning
+        form.form-horizontal(role='form', method='POST', action=data._id ? '/group-chat/update/' + data._id : '/group-chat/create')
+            .box-header.with-border
+                h3.box-title Thông tin nhóm chat
+            // /.box-header
+            .box-body
+                .form-group
+                    .col-lg-6.col-md-6(class=errors && errors.groupName && 'has-error')
+                        label.control-label Tên nhóm
+                        input.form-control(type='text', name='groupName', value=(data.groupName || ''), placeholder='Nhập tên nhóm')
+                        if errors && errors.groupName
+                            span.help-block #{errors.groupName.msg}
+                    .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
+                        label.control-label Trạng thái
+                        select#select-status.form-control(name='status')
+                            option(value=1, selected=(data.status == 1) ? true : false) Public
+                            option(value=0, selected=(data.status == 0) ? true : false) Draft
+                .form-group
+                    .col-lg-12.col-md-12(class=errors && errors.description && 'has-error')
+                        label.control-label Mô tả
+                        textarea.form-control(rows=3, name='description', value=(data.description || ''), placeholder='Mô tả') #{data.description}
+                        if errors && errors.description
+                            span.help-block #{errors.description.msg}  
+                // Box footer        
+            .box-footer
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-check
+                    |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}

@@ -1,0 +1,136 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/stylesheets/data-table.css')
+block javascripts
+    script(src='/javascripts/select-option.js')
+    script(src='/javascripts/data-table.js')
+    script(type='text/javascript').
+        let dataTable = new DataTable({
+            selector: '#table-group-chat-members',
+            urlFilter: '/group-chat/search-member',
+            filters: [
+                {
+                    name: 'memberName',
+                    type: 'text'
+                },
+                {
+                    name: 'statusDisplay',
+                    type: 'select',
+                    key: 'value',
+                    value: 'text',
+                    placeholder: 'Trạng thái',
+                    style: 'width:140px;',
+                    search: false,
+                    options: [
+                        {
+                            value: 1,
+                            text: 'Active'
+                        },
+                        {
+                            value: 0,
+                            text: 'Inactive'
+                        }
+                    ]
+                }
+            ]
+        });
+        new SelectOption({
+            selector: '#select-members',
+            search: true
+        });
+
+block content
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Chi tiết nhóm:
+        label.text-success &nbsp;#{data.groupName}
+      ol.breadcrumb
+        li
+          a(href='/')
+            i.fa.fa-dashboard
+            |  Dashboard
+        li
+          a(href='/')
+            i.fa.fa-comments
+            |  Nhóm chat
+        li.active Chi tiết
+    // Main content
+    section.content
+        .panel.panel-success
+            .panel-heading Danh sách quản trị viên
+            .panel-body
+                .box
+                    .box-body.table-responsive.no-padding
+                        table#table-group-chat-admins.table.table-hover.t-data-table
+                            thead
+                                tr
+                                    th(name='STT') STT
+                                    th(name='adminName') Họ tên
+                                    th(name='statusDisplay') Trạng thái
+                                    th.text-center(name='actions', actions={view: '/group-chat/view', edit: '/group-chat/edit', delete: '/group-chat/delete'}, style='width: 140px;') Hành động
+                            tbody
+                                if (data.admins && data.admins.length > 0)
+                                    each dt, i in data.admins
+                                        tr
+                                            td #{i+1}
+                                            td #{dt.fullName}
+                                            td #{dt.statusDisplay}
+                                            td.text-center
+                                                button.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Xóa ' + dt.fullName + ' khỏi danh sách quản trị viên ?", "/group-chat/' + data._id + '/remove-admin/' + dt._id + '")')
+                                                    em.fa.fa-trash
+        .panel.panel-info
+            .panel-heading
+                | Danh sách thành viên
+                button.btn.btn-success.pull-right(type='button', data-toggle='modal', data-target='#addMember', style='padding: 0 5px;')
+                    | Thêm&nbsp;
+                    .fa.fa-plus
+                // Modal
+                #addMember.modal.fade(role='dialog')
+                    .modal-dialog
+                        // Modal content
+                        .modal-content
+                            form.form-horizontal(role='form', method='POST', action='/group-chat/' + data._id + '/add-member')
+                                .modal-header
+                                    button.close(type='button', data-dismiss='modal') ×
+                                    h4.modal-title Thêm thành viên
+                                .modal-body
+                                        .form-group
+                                            .col-lg-12.col-md-12(class=errors && errors.members && 'has-error')
+                                                label.control-label Thành viên
+                                                select#select-members.form-control(name='members', multiple=true)
+                                                    each u in users
+                                                        option(value=u._id) #{u.fullName}
+                                .modal-footer
+                                    button.btn.btn-success.pull-left(type='submit') Lưu lại
+                                    button.btn.btn-default(type='button', data-dismiss='modal') Thoát
+
+            .panel-body
+                .box
+                    .box-body.table-responsive.no-padding
+                        table#table-group-chat-members.table.table-hover
+                            thead
+                                tr
+                                    th(name='STT') STT
+                                    th(name='memberName') Họ tên
+                                    th(name='statusDisplay') Trạng thái
+                                    th.text-center(name='actions', actions={view: '/group-chat/view', edit: '/group-chat/edit', delete: '/group-chat/delete'}, style='width: 140px;') Hành động
+                            tbody
+                                if (data.members && data.members.length > 0)
+                                    each dt, i in data.members
+                                        tr
+                                            td #{i+1}
+                                            td #{dt.fullName}
+                                            td #{dt.statusDisplay}
+                                            td.text-center
+                                                if (dt.blockedGroupChat && dt.blockedGroupChat.indexOf(data._id) > -1)
+                                                    a.user-action.btn.btn-success(onclick='return confirmDelete(this, "Bỏ chặn ' + dt.fullName + '?", "/group-chat/' + data._id + '/remove-blacklist/' + dt._id + '")', title='Bỏ chặn')
+                                                            em.fa.fa-unlock
+                                                else
+                                                    if (!dt.adminGroupChat || (dt.adminGroupChat && dt.adminGroupChat.indexOf(data._id) == -1))
+                                                        a.user-action.btn.btn-success(href='/group-chat/' + data._id + '/add-admin/' + dt._id, title='Thêm vào quản trị viên')
+                                                            em.fa.fa-user-plus
+                                                        abutton.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Chặn ' + dt.fullName + '?", "/group-chat/' + data._id + '/add-blacklist/' + dt._id + '")', title='Chặn chat')
+                                                            em.fa.fa-lock

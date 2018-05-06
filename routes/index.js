@@ -6,6 +6,7 @@ var appRouters = function(app) {
     const authRouter = require('./auth');
     const loginManagerRouter = require('./login-manager');
     const logRouter = require('./log');
+    const groupChatRouter = require('./group-chat');
 
     app.use('/', dashboardRouter);
     app.use('/news-category', newsCategoryRouter);
@@ -14,6 +15,7 @@ var appRouters = function(app) {
     app.use('/auth', authRouter);
     app.use('/login-manager', loginManagerRouter);
     app.use('/log', logRouter);
+    app.use('/group-chat', groupChatRouter);
 }
 
 module.exports = appRouters;

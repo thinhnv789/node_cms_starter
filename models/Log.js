@@ -14,7 +14,7 @@ const logSchema = new mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {timestamps: true, usePushEach: true});
 
-logSchema.index({host:1, collectionRef:1})
+logSchema.index({host:1, collectionRef:1});
 
 const Log = mongoose.model('Log', logSchema);
 

@@ -1,0 +1,52 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/libs/cropperjs/dist/cropper.min.css')
+    link(rel='stylesheet', href='/stylesheets/cropper-editor.css')
+block javascripts
+    script(type='text/javascript', src='/javascripts/select-option.js')
+    script(type='text/javascript', src='/libs/cropperjs/dist/cropper.min.js')
+    script(type='text/javascript', src='/javascripts/cropper-editor.js')
+    script(type='text/javascript').
+        let cropperEditor1 = new CropperEditor({
+            selector: '#cropper-images',
+            upload_url: '/api/media/upload-image',
+            uploadDir: '/images/news',
+            prefixFileName: 'news',
+            isMultiple: false,
+            thumbWidth: 400,
+            thumbHeight: 400,
+            clientOptions: {
+                viewMode: 1,
+                dragMode: 'move',
+                cropBoxResizable: false
+            }
+        });
+        new SelectOption({
+            selector: '#select-status',
+            search: false
+        })
+
+block content
+    include ./form
+    // Content Header (Page header)
+    section.content-header
+        h1
+            | Sửa nhóm chat
+        ol.breadcrumb
+            li
+                a(href='/')
+                    i.fa.fa-dashboard
+                    |  Dashboard
+            li
+                a(href='/group-chat')
+                    i.fa.fa-comments
+                    |  Nhóm chat
+            li.active Chỉnh sửa
+    // Main content
+    section.content
+        .row
+            .col-lg-12.col-md-12
+                +form(data ? data : {})
+                    // /.box-body

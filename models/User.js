@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema({
   role: {type: String},
   status: { type: Number, default: 0 }, // active, block, reported
   isOnline: { type: Boolean },
+  groupChat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChat' }],
+  adminGroupChat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChat' }],
+  blockedGroupChat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChat' }]
 }, {timestamps: true, usePushEach: true});
 
 userSchema.set('toJSON', {

@@ -2,6 +2,7 @@ const platform = require('platform');
 const Auth = require('./../helpers/auth');
 const LoginManager = require('./../models/LoginManager');
 const Message = require('./../models/Message');
+const RecentMessage = require('./../models/RecentMessage');
 
 var ioAuthenticatedEvents = function(io, socket) {
     /* User join to personal room */
@@ -52,7 +53,30 @@ var ioAuthenticatedEvents = function(io, socket) {
                 messageContent: data.messageContent
             }
             let newMessage = new Message(newMessageData);
-            newMessage.save();
+            newMessage.save((err, m) => {
+                // Create or update recent message
+                if (m) {
+                    RecentMessage.findOne({
+                        sender: data.sender._id,
+                        recipient: data.recipient._id
+                    }).exec((err, recentMessage) => {
+                        if (recentMessage) {
+                            recentMessage.latestMessage = m._id;
+                            recentMessage.latestMessageContent = m.messageContent;
+                            recentMessage.countUnread = recentMessage.countUnread + 1;
+                            recentMessage.save();
+                        } else {
+                            let newRecord = new RecentMessage();
+                            newRecord.sender = data.sender._id;
+                            newRecord.recipient = data.recipient._id;
+                            newRecord.latestMessage = m._id;
+                            newRecord.latestMessageContent = m.messageContent;
+                            newRecord.countUnread = 1;
+                            newRecord.save();
+                        }
+                    })
+                }
+            });
         } catch (e) {
 
         }
@@ -76,7 +100,6 @@ var ioEvents = function(io) {
         let user = {};
         if (socket.request.session && socket.request.session.user) {
             user = socket.request.session.user;
-            console.log('user', user);
             if (user && user._id) {
                 socket.user = user;
                 ioAuthenticatedEvents(io, socket);

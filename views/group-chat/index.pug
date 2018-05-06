@@ -1,0 +1,89 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/stylesheets/data-table.css')
+block javascripts
+    script(src='/javascripts/select-option.js')
+    script(src='/javascripts/data-table.js')
+    script(type='text/javascript').
+        let dataTable = new DataTable({
+            selector: '#table-group-chat',
+            urlFilter: '/group-chat/search',
+            filters: [
+                {
+                    name: 'groupName',
+                    type: 'text'
+                },
+                {
+                    name: 'statusDisplay',
+                    type: 'select',
+                    key: 'value',
+                    value: 'text',
+                    placeholder: 'Trạng thái',
+                    style: 'width:140px;',
+                    search: false,
+                    options: [
+                        {
+                            value: 1,
+                            text: 'Active'
+                        },
+                        {
+                            value: 0,
+                            text: 'Inactive'
+                        }
+                    ]
+                }
+            ]
+        })
+
+block content
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Nhóm chat
+      ol.breadcrumb
+        li
+          a(href='/')
+            i.fa.fa-dashboard
+            |  Dashboard
+        li.active Nhóm chat
+    // Main content
+    section.content
+        .row
+            .col-xs-12
+                a.btn.btn-success(href='/group-chat/create') Tạo mới
+                hr
+                .box
+                    .box-header
+                        h3.box-title 
+                        .box-tools
+                            .input-group.input-group-sm(style='width: 150px;')
+                                input.form-control.pull-right(type='text', name='table_search', placeholder='Search')
+                                .input-group-btn
+                                    button.btn.btn-default(type='submit')
+                                        i.fa.fa-search
+                    // /.box-header
+                    .box-body.table-responsive.no-padding
+                        table#table-group-chat.table.table-hover
+                            thead
+                                tr
+                                    th(name='STT') STT
+                                    th(name='groupName') Tiêu đề
+                                    th(name='description') Mô tả
+                                    th(name='statusDisplay') Trạng thái
+                                    th.text-center(name='actions', actions={view: '/group-chat/view', edit: '/group-chat/edit', delete: '/group-chat/delete'}, style='width: 140px;') Hành động
+                            tbody
+                                each dt, i in data
+                                    tr
+                                        td #{i+1}
+                                        td #{dt.groupName}
+                                        td #{dt.description}
+                                        td #{dt.statusDisplay}
+                                        td.text-center
+                                            a.user-action.btn.btn-default(href='/group-chat/view/' + dt._id)
+                                                em.fa.fa-eye
+                                            a.user-action.btn.btn-success(href='/group-chat/edit/' + dt._id)
+                                                em.fa.fa-pencil
+                                            button.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Bạn có chắc chắn muốn xóa nhóm này không?", "/group-chat/delete/' + dt._id + '")')
+                                                em.fa.fa-trash
