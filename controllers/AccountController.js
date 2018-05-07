@@ -7,24 +7,50 @@ const moment = require('moment');
  * @param {*} res 
  * @param {*} next 
  */
-exports.getIndex = (req, res, next) => {
+exports.getIndex = async (req, res, next) => {
     try {
-        UserModel.find({}).sort('-createdAt').exec((err, users) => {
-            res.render('account/index', {
-                title: 'Danh sách tài khoản',
-                current: 'account',
-                data: users
-            });
-        })
+        let page = parseInt(process.env.DEFAULT_PAGE, 10),
+            queryPage = parseInt(req.query.page, 10),
+            pageSize = parseInt(process.env.DEFAULT_PAGESIZE, 10),
+            queryPageSize = parseInt(req.query.pageSize);
+
+        if (queryPage && queryPage > 0) {
+            page = queryPage;
+        }
+        if (queryPageSize && queryPageSize > 0) {
+            pageSize = queryPageSize;
+        }
+
+        let users = await UserModel.find({}).sort('-createdAt').skip((page - 1) * pageSize).limit(pageSize);
+        let total = await UserModel.count({});
+
+        res.render('account/index', {
+            title: 'Danh sách tài khoản',
+            current: 'account',
+            data: users,
+            pageSize: pageSize,
+            total: total
+        });
     } catch (e) {
        return res.redirect('404');
     }
 };
 
-exports.getSearch = (req, res, next) => {
+exports.getSearch = async (req, res, next) => {
     try {
+        let page = parseInt(process.env.DEFAULT_PAGE, 10),
+            queryPage = parseInt(req.query.page, 10),
+            pageSize = parseInt(process.env.DEFAULT_PAGESIZE, 10),
+            queryPageSize = parseInt(req.query.pageSize);
         let params = req.query;
         let findCondition = {};
+
+        if (queryPage && queryPage > 0) {
+            page = queryPage;
+        }
+        if (queryPageSize && queryPageSize > 0) {
+            pageSize = queryPageSize;
+        }
 
         /** Query search */
         if (params.fullName) {
@@ -45,12 +71,14 @@ exports.getSearch = (req, res, next) => {
             findCondition.status = params.statusDisplay;
         }
 
-        UserModel.find(findCondition).exec((err, users) => {
-            return res.json({
-                success: true,
-                errorCode: 0,
-                data: users
-            })
+        let users = await UserModel.find(findCondition).sort('-createdAt').skip((page - 1) * pageSize).limit(pageSize);
+        let total = await UserModel.count(findCondition);
+        return res.json({
+            success: true,
+            errorCode: 0,
+            data: users,
+            pageSize: pageSize,
+            total: total
         })
     } catch (e) {
         return res.json({

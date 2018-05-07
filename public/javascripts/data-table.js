@@ -6,7 +6,8 @@ class DataTable {
         this.filterEls = {};
         this.searchParams = {};
         this.page = 1;
-        this.pageSize = 10;
+        this.pageSize = config.pageSize;
+        this.total = config.total;
         this.init(config.selector);
         this.generateSearch(config.selector, config.filters);
     }
@@ -41,6 +42,8 @@ class DataTable {
                 this.filterEls[name] = tdFilter;
             }
             thead.appendChild(trFilter);
+
+            this.genPagination();
         }
     }
 
@@ -71,8 +74,6 @@ class DataTable {
     generateInputText(data) {
         let searchItem = document.createElement('div');
         searchItem.className = 'search-item input-text';
-        // searchItem.style = 'width:' + this.selector.innerWidth();
-        // console.log('data', data);
 
         let inputSearch = document.createElement('input');
         inputSearch.className = 'form-control';
@@ -137,9 +138,7 @@ class DataTable {
         }
 
         searchItem.appendChild(inputSearch);
-        console.log('inputSearch', inputSearch);
         inputSearch.onchange = function() {
-            console.log('testtt');
             this.searchParams[data.name] = inputSearch.value;
             
             let queryParams = '';
@@ -165,27 +164,88 @@ class DataTable {
         return searchItem;
     }
 
+    genPagination() {
+        /**
+         * Append pagination
+         */
+        let pUl = document.getElementById(this.config.selector + '-pagination');
+
+        if (pUl) {
+            pUl.innerHTML = '';
+        } else {
+            pUl = document.createElement('ul')
+            pUl.id = this.config.selector + '-pagination';
+            pUl.className = 'pagination data-table-pagination pull-right';
+        }
+
+        if (this.total === 0 || this.total <= this.pageSize) {
+            return pUl;
+        }
+        for (let i=0; i<(this.total/this.pageSize); i++) {
+            let li = document.createElement('li');
+            let span = document.createElement('span');
+            span.textContent = i + 1;
+            span.onclick = function() {
+                this.page = i+1;
+
+                let queryParams = '';
+
+                for (let i=0; i<this.columns.length; i++) {
+                    let param = this.searchParams[this.columns[i]];
+
+                    if (param) {
+                        if (queryParams === '') {
+                            queryParams += this.columns[i] + '=' + param;
+                        } else {
+                            queryParams += '&' + this.columns[i] + '=' + param;
+                        }
+                    }
+                }
+
+                if (queryParams) {
+                    queryParams += '&page=' + (i+1) + '&pageSize=' + this.pageSize;
+                } else {
+                    queryParams += 'page=' + (i+1) + '&pageSize=' + this.pageSize;
+                }
+                /**
+                 * Request server
+                 */
+                this.requestServerFilter(queryParams);
+            }.bind(this)
+            li.className = ((i + 1) === this.page) ? 'active' : '';
+            li.appendChild(span);
+            pUl.appendChild(li);
+        }
+
+        this.tableSelector.parentNode.insertBefore(pUl, this.tableSelector.nextSibling);
+
+        return pUl;
+    }
+
     requestServerFilter(queryParams) {
         let url = this.config.urlFilter + '?' + queryParams;
         let xhttp = new XMLHttpRequest();
-        let _this = this;
-        let table = document.querySelector(_this.config.selector);
-        let tBody = document.querySelector(_this.config.selector + ' tbody'), html = '';
+        let table = document.querySelector(this.config.selector);
+        let tBody = document.querySelector(this.config.selector + ' tbody'), html = '';
 
-        tBody.innerHTML = '<tr class="processing"><td colspan="' + _this.columns.length + '" style="text-align: center">Processing...</td></tr>';
+        tBody.innerHTML = '<tr class="processing"><td colspan="' + this.columns.length + '" style="text-align: center">Processing...</td></tr>';
 
         xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                let dataRes = JSON.parse(this.responseText);
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                let dataRes = JSON.parse(xhttp.responseText);
                 let data = dataRes.data;
+                console.log('dataRes', dataRes);
+                if (dataRes.pageSize)
+                    this.pageSize = dataRes.pageSize;
+                this.total = dataRes.total || 0;
 
                 if (data && data instanceof Array) {
                     if (tBody) {
                         if (data.length > 0) {
                             for(let i=0; i<data.length; i++) {
                                 html += '<tr>';
-                                for (let j=0; j<_this.columns.length; j++) {
-                                    switch(_this.columns[j]) {
+                                for (let j=0; j<this.columns.length; j++) {
+                                    switch(this.columns[j]) {
                                         case 'STT':
                                             html += '<td>' + (i + 1) + '</td>';
                                             break;
@@ -197,7 +257,7 @@ class DataTable {
                                             }
                                             break;
                                         case 'actions':
-                                            let actionEl = document.querySelector(_this.config.selector + ' thead tr th[name="actions"]');
+                                            let actionEl = document.querySelector(this.config.selector + ' thead tr th[name="actions"]');
                                             if (actionEl) {
                                                 let actions = actionEl.getAttribute('actions');
                                                 if (actions) {
@@ -221,68 +281,20 @@ class DataTable {
                                             }
                                             break;
                                         default:
-                                            html += '<td>' + data[i][_this.columns[j]] + '</td>';
+                                            html += '<td>' + data[i][this.columns[j]] + '</td>';
                                     }
                                 }
                                 html += '</tr>';
                             }
                             tBody.innerHTML = html;
-    
-                            /**
-                             * Append pagination
-                             */
-                            // let pUl = table.nextSibling;
-                            // if (pUl) {
-                            //     pUl.innerHTML = '';
-                            // } else {
-                            //     pUl = document.createElement('ul')
-                            //     pUl.className = 'pagination data-table-pagination';
-                            // }
-    
-                            // for (let i=0; i<6; i++) {
-                            //     let li = document.createElement('li');
-                            //     let span = document.createElement('span');
-                            //     span.textContent = i + 1;
-                            //     span.onclick = function() {
-                            //         _this.page = i+1;
-    
-                            //         let queryParams = '';
-                    
-                            //         for (let i=0; i<_this.config.columns.length; i++) {
-                            //             let param = _this.searchParams[_this.config.columns[i]];
-    
-                            //             if (param) {
-                            //                 if (queryParams === '') {
-                            //                     queryParams += _this.config.columns[i] + '=' + param;
-                            //                 } else {
-                            //                     queryParams += '&' + _this.config.columns[i] + '=' + param;
-                            //                 }
-                            //             }
-                            //         }
-    
-                            //         if (queryParams) {
-                            //             queryParams += '&page=' + i + '&pageSize=10';
-                            //         } else {
-                            //             queryParams += '?page=' + i + '&pageSize=10';
-                            //         }
-                            //         /**
-                            //          * Request server
-                            //          */
-                            //         _this.requestServerFilter(queryParams);
-                            //     }.bind(_this)
-                            //     li.className = ((i + 1) === _this.page) ? 'active' : '';
-                            //     li.appendChild(span);
-                            //     pUl.appendChild(li);
-                            // }
-                            
-                            // table.parentNode.insertBefore(pUl, table.nextSibling);
                         } else {
-                            tBody.innerHTML = '<tr class="processing"><td colspan="' + _this.columns.length + '" style="text-align: center">Không tìm thấy dữ liệu</td></tr>';
+                            tBody.innerHTML = '<tr class="processing"><td colspan="' + this.columns.length + '" style="text-align: center">Không tìm thấy dữ liệu</td></tr>';
                         }
+                        let pagination = this.genPagination();
                     }
                 }
             }
-        };
+        }.bind(this);
         xhttp.open("GET", url, true);
         xhttp.send();
     }

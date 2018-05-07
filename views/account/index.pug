@@ -11,6 +11,8 @@ block javascripts
             let dataTable = new DataTable({
                 selector: '#table-accounts',
                 urlFilter: '/account/search',
+                pageSize: !{JSON.stringify(pageSize)},
+                total: !{JSON.stringify(total)},
                 //- columns: ['STT', 'firstName', 'lastName', 'userName', 'email'],
                 filters: [
                     {

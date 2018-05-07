@@ -34,9 +34,9 @@
     padding: 2px 6px;
     margin: 0 1px;
 }
-.data-table-pagination {
+/* .data-table-pagination {
     margin-top: 0;
-}
+} */
 .data-table-pagination li {
     cursor: pointer;
 }
