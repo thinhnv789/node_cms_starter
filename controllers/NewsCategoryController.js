@@ -174,16 +174,10 @@ exports.postUpdate = (req, res, next) => {
 exports.getDelete = (req, res, next) => {
     try {
         NewsCategoryModel.findById(req.params.categoryId).exec((err, category) => {
-            if (err) {
+            if (err || !category) {
                 req.flash('errors', 'Danh mục không tồn tại');
                 return res.redirect('/news-category');
             }
-            console.log('news', category.news);
-            NewsModel.remove({
-                _id: { $in: category.news}
-            }, (err) => {
-                console.log('err remove', err);
-            });
             category.remove((err) => {
                 req.flash('success', 'Xóa danh mục thành công');
                 return res.redirect('/news-category');

@@ -238,18 +238,11 @@ exports.getDelete = (req, res, next) => {
                 req.flash('errors', 'Không tìm thấy dữ liệu');
                 return res.redirect('/news');
             }
-            let categoryId = newsDelete.category, newsIdDelete = newsDelete._id;
             newsDelete.remove((err) => {
                 if (err) {
                     req.flash('errors', 'Không tìm thấy dữ liệu');
                     return res.redirect('/news');
                 }
-                NewsCategoryModel.findById(categoryId).exec((err, category) => {
-                    if (category) {
-                        category.news.pull(newsIdDelete);
-                        category.save();
-                    }
-                })
                 req.flash('success', 'Xóa bài viết thành công');
                 return res.redirect('/news');
             })

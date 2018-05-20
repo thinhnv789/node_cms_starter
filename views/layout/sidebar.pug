@@ -57,12 +57,27 @@ aside.main-sidebar
 				ul.treeview-menu
 					li(class=(current == 'account') ? 'active' : null)
 						a(href='/account')
-							i.fa.fa-users
+							i.fa.fa-list-alt
 							span Danh sách
 					li(class=(current == 'login-manager') ? 'active' : null)
 						a(href='/login-manager')
 							i.fa.fa-laptop
 							span Quản lý thiết bị
+			li.treeview(class=(current == 'role' || current == 'permission') ? 'active' : null)
+				a(href='#')
+					i.fa.fa-cogs
+					span Phân quyền
+					span.pull-right-container
+						i.fa.fa-angle-left.pull-right
+				ul.treeview-menu
+					li(class=(current == 'role') ? 'active' : null)
+						a(href='/role')
+							i.fa.fa-users
+							span Nhóm
+					li(class=(current == 'permission') ? 'active' : null)
+						a(href='/permission')
+							i.fa.fa-user-secret
+							span Quyền truy cập
 			li.treeview(class=(current == 'config' || current == 'log') ? 'active' : null)
 				a(href='#')
 					i.fa.fa-cog

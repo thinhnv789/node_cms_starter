@@ -58,6 +58,18 @@ newsSchema.virtual('statusDisplay').get(function () {
     return (this.status ? 'Public' : 'Draft');
 });
 
+/**
+ * Remove news from news category
+ */
+newsSchema.pre('remove', function (next) {
+    var news = this;
+    news.model('NewsCategory').update(
+        {_id: news.category},
+        { $pull: { news: news._id } }, 
+        next
+    );
+});
+
 const News = mongoose.model('News', newsSchema);
 
 module.exports = News;
