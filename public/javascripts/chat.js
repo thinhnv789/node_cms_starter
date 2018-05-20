@@ -1,7 +1,9 @@
 /*
 * Connect socket
 */
-const socket = io('https://localhost:8008');
+const socket = io('https://' + window.location.hostname, {
+    transports: ['websocket']
+});
 
 socket.on('connect', () => {    
     /* Notification member login */

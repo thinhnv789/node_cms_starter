@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  role: {type: String},
+  roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
+  permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Permission' }],
   status: { type: Number, default: 0 }, // active, block, reported
   isOnline: { type: Boolean },
   groupChat: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChat' }],

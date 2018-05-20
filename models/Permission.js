@@ -9,8 +9,10 @@ const permissonSchema = new mongoose.Schema({
     accessRouter: {type: String, unique: true},
     description: {type: String},
     status: {type: Number},
-    createdBy: {type: mongoose.Schema.Types.ObjectId},
-    updatedBy: {type: mongoose.Schema.Types.ObjectId}
+    roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'Role'}],
+    users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    updatedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, {timestamps: true, usePushEach: true});
 
 const Permission = mongoose.model('Permission', permissonSchema);
