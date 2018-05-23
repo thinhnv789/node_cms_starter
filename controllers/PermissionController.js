@@ -9,7 +9,7 @@ const RoleModel = require('./../models/Role');
  */
 exports.getIndex = (req, res, next) => {
     try {
-        Permission.find({}).exec((err, permissions) => {
+        PermissionModel.find({}).exec((err, permissions) => {
             res.render('permission/index', {
                 title: 'Quyền truy cập',
                 current: 'permission',
@@ -17,7 +17,7 @@ exports.getIndex = (req, res, next) => {
             });
         })
     } catch (e) {
-       return res.redirect('404');
+       next(e);
     }
 };
 
@@ -69,35 +69,36 @@ exports.getCreate = (req, res, next) => {
 
 exports.postCreate = (req, res, next) => {
     try {
-        req.checkBody('categoryName', 'Tên danh mục không được để trống').notEmpty();
+        req.checkBody('permissionName', 'Nhập tên quyền').notEmpty();
+        req.checkBody('accessRouter', 'Access Router không được để trống').notEmpty();
         
         req.getValidationResult().then(function (errors) {
             if (!errors.isEmpty()) {
                 var errors = errors.mapped();
     
-                res.render('news-category/create', {
-                    title: 'Thêm danh mục bài viết',
+                res.render('permission/create', {
+                    title: 'Thêm quyền truy cập',
                     errors: errors,
                     data: req.body
                 });
             } else {
                 try {
                     let postData = {
-                        categoryName: req.body.categoryName || null,
-                        slug: req.body.slug || category.slug,
+                        permissionName: req.body.permissionName || null,
+                        accessRouter: req.body.accessRouter || null,
                         description: req.body.description || null,
                         status: req.body.status || 0,
                         createdBy: req.session.user._id
                     }
-                    let newRecord = new NewsCategoryModel(postData);
+                    let newRecord = new PermissionModel(postData);
                     newRecord.save((err, result) => {
                         if (err) {
                             console.log('err', err);
                             req.flash('errors', 'Có lỗi xảy ra. Vui lòng thử lại' + JSON.stringify(err));
-                            return res.redirect('/news-category');
+                            return res.redirect('/permission');
                         }
-                        req.flash('success', 'Danh mục ' + result.categoryName + ' đã được tạo');
-                        return res.redirect('/news-category');
+                        req.flash('success', 'Đã thêm quyền truy cập thành công');
+                        return res.redirect('/permission');
                     });
                 } catch (e) {
 

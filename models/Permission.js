@@ -15,6 +15,17 @@ const permissonSchema = new mongoose.Schema({
     updatedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, {timestamps: true, usePushEach: true});
 
+permissonSchema.set('toJSON', {
+    virtuals: true
+});
+
+/**
+ * Function get status
+ */
+permissonSchema.virtual('statusDisplay').get(function () {
+    return (this.status ? 'Active' : 'Inactive');
+});
+
 const Permission = mongoose.model('Permission', permissonSchema);
 
 module.exports = Permission;

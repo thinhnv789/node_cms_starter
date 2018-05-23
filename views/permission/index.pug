@@ -1,0 +1,91 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/stylesheets/data-table.css')
+block javascripts
+    script(src='/javascripts/select-option.js')
+    script(src='/javascripts/data-table.js')
+    script(type='text/javascript').
+        let dataTable = new DataTable({
+            selector: '#table-permissions',
+            urlFilter: '/permission/search',
+            filters: [
+                {
+                    name: 'permissionName',
+                    type: 'text'
+                },
+                {
+                    name: 'accessRouter',
+                    type: 'text'
+                },
+                {
+                    name: 'statusDisplay',
+                    type: 'select',
+                    key: 'value',
+                    value: 'text',
+                    placeholder: 'Trạng thái',
+                    style: 'width:140px;',
+                    search: false,
+                    options: [
+                        {
+                            value: 1,
+                            text: 'Public'
+                        },
+                        {
+                            value: 0,
+                            text: 'Draft'
+                        }
+                    ]
+                }
+            ]
+        })
+
+block content
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Quyền truy cập
+      ol.breadcrumb
+        li
+          a(href='/')
+            i.fa.fa-dashboard
+            |  Dashboard
+        li.active Permission
+    // Main content
+    section.content
+        .row
+            .col-xs-12
+                a.btn.btn-success(href='/permission/create') Tạo mới
+                hr
+                .box
+                    .box-header
+                        h3.box-title 
+                        .box-tools
+                            .input-group.input-group-sm(style='width: 150px;')
+                                input.form-control.pull-right(type='text', name='table_search', placeholder='Search')
+                                .input-group-btn
+                                    button.btn.btn-default(type='submit')
+                                        i.fa.fa-search
+                    // /.box-header
+                    .box-body.table-responsive.no-padding
+                        table#table-permissions.table.table-hover
+                            thead
+                                tr
+                                    th(name='STT') STT
+                                    th(name='permissionName') Tên quyền
+                                    th(name='accessRouter') Access Router
+                                    th(name='statusDisplay') Trạng thái
+                                    th.text-center(name='actions', actions={edit: '/permission/edit', delete: '/permission/delete'}, style='width: 140px;') Hành động
+                            tbody
+                                each dt, i in data
+                                    tr
+                                        td #{i+1}
+                                        td #{dt.permissionName}
+                                        td #{dt.accessRouter}
+                                        td #{dt.statusDisplay}
+                                        td.text-center
+                                            a.user-action.btn.btn-success(href='/permission/edit/' + dt._id)
+                                                em.fa.fa-pencil
+                                            button.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Bạn có chắc chắn muốn xóa quyền này không?", "/permission/delete/' + dt._id + '")')
+                                                em.fa.fa-trash
