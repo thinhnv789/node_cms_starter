@@ -15,17 +15,9 @@ class DataTable {
     init (selector) {
         let tableSelector = document.querySelector(selector);
         this.tableSelector = tableSelector;
+
         if (tableSelector) {
             tableSelector.classList.add('t-data-table');
-
-            // let btnFilter = document.createElement('button');
-            // btnFilter.className = selector.replace('#', '') + '-btn-filter';
-            // btnFilter.textContent = 'Filter';
-            // btnFilter.style = 'float: right;';
-            // btnFilter.onclick = function() {
-            //     tableSelector.classList.toggle('hidden-filter');
-            // }
-            // tableSelector.parentNode.insertBefore(btnFilter, tableSelector);
 
             let columns = document.querySelectorAll(selector + ' thead tr th');
             let thead = document.querySelector(selector + ' thead');
@@ -177,7 +169,8 @@ class DataTable {
             pUl.id = this.config.selector + '-pagination';
             pUl.className = 'pagination data-table-pagination pull-right';
         }
-
+        console.log('this.total', this.total);
+        console.log('this.pageSize', this.pageSize);
         if (this.total === 0 || this.total <= this.pageSize) {
             return pUl;
         }

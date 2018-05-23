@@ -32,7 +32,7 @@ exports.getIndex = async (req, res, next) => {
             total: total
         });
     } catch (e) {
-       return res.redirect('404');
+       next(e);
     }
 };
 

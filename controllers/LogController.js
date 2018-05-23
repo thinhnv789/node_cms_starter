@@ -6,17 +6,33 @@ const Log = require('./../models/Log');
  * @param {*} res 
  * @param {*} next 
  */
-exports.getIndex = (req, res, next) => {
+exports.getIndex = async (req, res, next) => {
     try {
-        Log.find({}).sort('-createdAt').exec((err, data) => {
-            res.render('log/index', {
-                title: 'Log lịch sử',
-                current: 'log',
-                data: data
-            });
-        })
+        let page = parseInt(process.env.DEFAULT_PAGE, 10),
+            queryPage = parseInt(req.query.page, 10),
+            pageSize = parseInt(process.env.DEFAULT_PAGESIZE, 10),
+            queryPageSize = parseInt(req.query.pageSize),
+            findCondition = {};
+
+        if (queryPage && queryPage > 0) {
+            page = queryPage;
+        }
+        if (queryPageSize && queryPageSize > 0) {
+            pageSize = queryPageSize;
+        }
+
+        let data = await Log.find(findCondition).sort('-createdAt').skip((page - 1) * pageSize).limit(pageSize);
+        let total = await Log.count(findCondition);
+
+        res.render('log/index', {
+            title: 'Log lịch sử',
+            current: 'log',
+            data: data,
+            pageSize: pageSize,
+            total: total
+        });
     } catch (e) {
-       return res.redirect('404');
+       next(e);
     }
 };
 

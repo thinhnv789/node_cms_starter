@@ -7,43 +7,16 @@ block javascripts
     script(src='/javascripts/select-option.js')
     script(src='/javascripts/data-table.js')
     script(type='text/javascript').
-        //- document.addEventListener("DOMContentLoaded", function(event) {
-            let dataTable = new DataTable({
-                selector: '#login-nanager',
-                urlFilter: '/login-manager/search',
-                //- columns: ['STT', 'firstName', 'lastName', 'userName', 'email'],
-                filters: [
-                    //- {
-                    //-     name: 'fullName',
-                    //-     type: 'text'
-                    //- },
-                    //- {
-                    //-     name: 'email',
-                    //-     type: 'text'
-                    //- },
-                    //- {
-                    //-     name: 'statusDisplay',
-                    //-     type: 'select',
-                    //-     key: 'value',
-                    //-     value: 'text',
-                    //-     placeholder: 'Trạng thái',
-                    //-     style: 'width:140px;',
-                    //-     search: false,
-                    //-     options: [
-                    //-         {
-                    //-             value: 1,
-                    //-             text: 'Đã kích hoạt'
-                    //-         },
-                    //-         {
-                    //-             value: 0,
-                    //-             text: 'Chưa kích hoạt'
-                    //-         }
-                    //-     ]
-                    //- }
-                ]
-            })
-        //- });
-
+        let dataTable = new DataTable({
+            selector: '#table-log',
+            urlFilter: '/log/search',
+            pageSize: !{JSON.stringify(pageSize)},
+            total: !{JSON.stringify(total)},
+            //- columns: ['STT', 'firstName', 'lastName', 'userName', 'email'],
+            filters: [
+            
+            ]
+        });
 
 block content
     // Content Header (Page header)
@@ -71,7 +44,7 @@ block content
                                         i.fa.fa-search
                     // /.box-header
                     .box-body.table-responsive.no-padding
-                        table#table-accounts.table.table-hover
+                        table#table-log.table.table-hover
                             thead
                                 tr
                                     th(name='STT') STT
