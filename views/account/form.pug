@@ -1,62 +1,114 @@
 mixin form(data={})
-    form.form-horizontal(role='form', method='POST', action=data._id ? '/account/update/' + data._id : '/account/create')
-        .form-group
-            .col-lg-6.col-md-6(class=errors && errors.firstName && 'has-error')
-                label.control-label Họ
-                input.form-control(type='text', name='firstName', value=(data.firstName || ''), placeholder='VD: Nguyễn Viết')
-                if errors && errors.firstName
-                    span.help-block #{errors.firstName.msg}
-            .col-lg-6.col-md-6(class=errors && errors.lastName && 'has-error')
-                label.control-label Tên
-                input.form-control(type='text', name='lastName', value=(data.lastName || ''), placeholder='VD: Thịnh')
-                if errors && errors.lastName
-                    span.help-block #{errors.lastName.msg}
-        .form-group
-            .col-lg-6.col-md-6(class=errors && errors.userName && 'has-error')
-                label.control-label Tên đăng nhập
-                input.form-control(type='text', name='userName', value=(data.userName || ''), placeholder='VD: Thinhnv')
-                if errors && errors.userName
-                    span.help-block #{errors.userName.msg}
-            .col-lg-6.col-md-6(class=errors && errors.email && 'has-error')
-                label.control-label Email
-                input.form-control(type='text', name='email', value=(data.email || ''), placeholder='VD: example@gmail.com')
-                if errors && errors.email
-                    span.help-block #{errors.email.msg}
-        .form-group
-            .col-lg-6.col-md-6(class=errors && errors.avatar && 'has-error')
-                label.control-label(style='display: block;text-align: left;') Ảnh đại diện
-                input#cropper-avatar.form-control(type='file', name='avatar', value=(data.avatar || null), imgSrc=(data.avatar ? (data.avatarUrl) : null))
-                if errors && errors.avatar
-                    span.help-block #{errors.avatar.msg}
-            .col-lg-6.col-md-6(class=errors && errors.birthDay && 'has-error')
-                label.control-label Ngày sinh
-                .input-group.date
-                    .input-group-addon
-                        i.fa.fa-calendar
-                    input#birthDay.form-control(type='text', name='birthDay', value=(moment(data.birthDay).format('DD-MM-YYYY') || ''))
-                if errors && errors.birthDay
-                    span.help-block #{errors.birthDay.msg}
-                
-        if !data._id
-            .form-group
-                .col-lg-6.col-md-6(class=errors && errors.password && 'has-error')
-                    label.control-label Mật khẩu
-                    input.form-control(type='password', name='password', value=(data.password || ''), placeholder='Mật khẩu')
-                    if errors && errors.password
-                        span.help-block #{errors.password.msg}
-                .col-lg-6.col-md-6(class=errors && errors.confirmPassword && 'has-error')
-                    label.control-label Nhập lại mật khẩu
-                    input.form-control(type='password', name='confirmPassword', placeholder='Nhập lại mật khẩu')
-                    if errors && errors.confirmPassword
-                        span.help-block #{errors.confirmPassword.msg}
-        .form-group
-            .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
-                label.control-label Trạng thái
-                select#select-status.form-control(name='status')
-                    option(value=1, selected=(data.status == 1) ? true : false) Kích hoạt
-                    option(value=0, selected=(data.status == 0) ? true : false) Vô hiệu hóa
-        // Box footer        
-        .box-footer
-            button.btn.btn-success(type='submit')
-                i.fa.fa-check
-                |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}
+    .box.box-warning
+        form.form-horizontal(role='form', method='POST', action=data._id ? '/account/update/' + data._id : '/account/create')
+            .box-header.with-border
+                h3.box-title Chỉnh sửa thông tin bên dưới
+            // /.box-header
+            .box-body
+                ul.nav.nav-tabs
+                    li.active
+                        a(data-toggle='tab', href='#main') Thông tin chính
+                    li
+                        a(data-toggle='tab', href='#role-pers') Phân quyền
+                .tab-content
+                    #main.tab-pane.fade.in.active
+                        .form-group
+                            .col-lg-6.col-md-6(class=errors && errors.firstName && 'has-error')
+                                label.control-label Họ
+                                input.form-control(type='text', name='firstName', value=(data.firstName || ''), placeholder='VD: Nguyễn Viết')
+                                if errors && errors.firstName
+                                    span.help-block #{errors.firstName.msg}
+                            .col-lg-6.col-md-6(class=errors && errors.lastName && 'has-error')
+                                label.control-label Tên
+                                input.form-control(type='text', name='lastName', value=(data.lastName || ''), placeholder='VD: Thịnh')
+                                if errors && errors.lastName
+                                    span.help-block #{errors.lastName.msg}
+                        .form-group
+                            .col-lg-6.col-md-6(class=errors && errors.userName && 'has-error')
+                                label.control-label Tên đăng nhập
+                                input.form-control(type='text', name='userName', value=(data.userName || ''), placeholder='VD: Thinhnv')
+                                if errors && errors.userName
+                                    span.help-block #{errors.userName.msg}
+                            .col-lg-6.col-md-6(class=errors && errors.email && 'has-error')
+                                label.control-label Email
+                                input.form-control(type='text', name='email', value=(data.email || ''), placeholder='VD: example@gmail.com')
+                                if errors && errors.email
+                                    span.help-block #{errors.email.msg}
+                        .form-group
+                            .col-lg-6.col-md-6(class=errors && errors.avatar && 'has-error')
+                                label.control-label(style='display: block;text-align: left;') Ảnh đại diện
+                                input#cropper-avatar.form-control(type='file', name='avatar', value=(data.avatar || null), imgSrc=(data.avatar ? (data.avatarUrl) : null))
+                                if errors && errors.avatar
+                                    span.help-block #{errors.avatar.msg}
+                            .col-lg-6.col-md-6(class=errors && errors.birthDay && 'has-error')
+                                label.control-label Ngày sinh
+                                .input-group.date
+                                    .input-group-addon
+                                        i.fa.fa-calendar
+                                    input#birthDay.form-control(type='text', name='birthDay', value=(moment(data.birthDay).format('DD-MM-YYYY') || ''))
+                                if errors && errors.birthDay
+                                    span.help-block #{errors.birthDay.msg}
+                                
+                        if !data._id
+                            .form-group
+                                .col-lg-6.col-md-6(class=errors && errors.password && 'has-error')
+                                    label.control-label Mật khẩu
+                                    input.form-control(type='password', name='password', value=(data.password || ''), placeholder='Mật khẩu')
+                                    if errors && errors.password
+                                        span.help-block #{errors.password.msg}
+                                .col-lg-6.col-md-6(class=errors && errors.confirmPassword && 'has-error')
+                                    label.control-label Nhập lại mật khẩu
+                                    input.form-control(type='password', name='confirmPassword', placeholder='Nhập lại mật khẩu')
+                                    if errors && errors.confirmPassword
+                                        span.help-block #{errors.confirmPassword.msg}
+                        .form-group
+                            .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
+                                label.control-label Trạng thái
+                                select#select-status.form-control(name='status')
+                                    option(value=1, selected=(data.status == 1) ? true : false) Kích hoạt
+                                    option(value=0, selected=(data.status == 0) ? true : false) Vô hiệu hóa
+                        // Box footer        
+                    #role-pers.tab-pane.fade
+                        .form-group
+                            .col-lg-12.col-md-12(class=errors && errors.roles && 'has-error')
+                                label.control-label Vai trò
+                                select#select-roles.form-control(name='roles', data-placeholder="Chọn vai trò")
+                                    option(value='')
+                                    if roles
+                                        each role, i in roles
+                                            option(value=role._id) #{role.roleName}
+                                if errors && errors.roles
+                                    span.help-block #{errors.roles.msg}
+                        .form-group
+                            .col-lg-12.col-md-12
+                                label.control-label Quyền truy cập thêm:
+                                - for (var i = 0; i < permissions.length; i = i+3) {
+                                    .row
+                                        .col-lg-4.col-md-4
+                                            .checkbox
+                                                label
+                                                    input(type='checkbox', name='permissions', value=permissions[i]._id, checked=(data.permissions && data.permissions.indexOf(permissions[i]._id)>-1) ? true : false)
+                                                    span.cr
+                                                        i.cr-icon.fa.fa-rocket
+                                                    | #{permissions[i].permissionName}
+                                        if permissions[i+1]
+                                            .col-lg-4.col-md-4
+                                                .checkbox
+                                                    label
+                                                        input(type='checkbox', name='permissions', value=permissions[i+1]._id, checked=(data.permissions && data.permissions.indexOf(permissions[i+1]._id)>-1) ? true : false)
+                                                        span.cr
+                                                            i.cr-icon.fa.fa-rocket
+                                                        | #{permissions[i+1].permissionName}
+                                        if permissions[i+2]
+                                            .col-lg-4.col-md-4
+                                                .checkbox
+                                                    label
+                                                        input(type='checkbox', name='permissions', value=permissions[i+2]._id, checked=(data.permissions && data.permissions.indexOf(permissions[i+2]._id)>-1) ? true : false)
+                                                        span.cr
+                                                            i.cr-icon.fa.fa-rocket
+                                                        | #{permissions[i+2].permissionName}
+                                - }
+            .box-footer
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-check
+                    |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}

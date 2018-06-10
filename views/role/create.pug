@@ -27,5 +27,5 @@ block content
     section.content
         .row
             .col-lg-12.col-md-12
-                +form(data ? data : {})
+                +form(data ? data : {}, permissions ? permissions : {})
                     // /.box-body

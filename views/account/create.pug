@@ -56,10 +56,5 @@ block content
     section.content
         .row
             .col-lg-12.col-md-12
-                .box.box-warning
-                    .box-header.with-border
-                        h3.box-title Thông tin tài khoản
-                    // /.box-header
-                    .box-body
-                        +form(data ? data : {})
+                +form(data ? data : {})
                     // /.box-body

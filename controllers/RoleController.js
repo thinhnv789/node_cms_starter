@@ -85,10 +85,8 @@ exports.postCreate = (req, res, next) => {
                     res.render('role/create', {
                         title: 'Thêm vai trò',
                         errors: errors,
-                        data: {
-                            current: req.body,
-                            permissions: permissions
-                        }
+                        data: req.body,
+                        permissions: permissions
                     });
                 });
             } else {
@@ -138,10 +136,8 @@ exports.getEdit = (req, res, next) => {
             res.render('role/edit', {
                 title: 'Sửa thông vai trò',
                 current: 'role',
-                data: {
-                    current: results.role,
-                    permissions: results.permissions
-                }
+                data: results.role,
+                permissions: results.permissions
             });
         });
     } catch (e) {
@@ -151,42 +147,41 @@ exports.getEdit = (req, res, next) => {
 
 exports.postUpdate = (req, res, next) => {
     try {
-        req.checkBody('categoryName', 'Tên danh mục không được để trống').notEmpty();
+        req.checkBody('roleName', 'Enter Role Name').notEmpty();
         
         req.getValidationResult().then(function (errors) {
             if (!errors.isEmpty()) {
                 var errors = errors.array();
                 
                 req.flash('errors', errors[0].msg);
-                return res.redirect('/news-category/edit/' + req.params.categoryId);
+                return res.redirect('/role/edit/' + req.params.roleId);
             } else {
                 try {
-                    NewsCategoryModel.findById(req.params.categoryId).exec((err, category) => {
+                    RoleModel.findById(req.params.roleId).exec((err, role) => {
                         let newData = {
-                            categoryName: req.body.categoryName || category.categoryName,
-                            slug: req.body.slug || category.slug,
-                            description: req.body.description || category.description,
-                            status: req.body.status || category.status,
+                            roleName: req.body.roleName || role.roleName,
+                            status: req.body.status || role.status,
+                            permissions: req.body.permissions || role.permissions || [],
                             updatedBy: req.session.user._id
                         }
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
-                            res.redirect('/news-category/edit/' + req.params.categoryId);
+                            res.redirect('/role/edit/' + req.params.roleId);
                         } else {
-                            category = Object.assign(category, newData);
-                            category.save((err) => {
+                            role = Object.assign(role, newData);
+                            role.save((err) => {
                                 req.flash('success', 'Cập nhật thành công');
-                                res.redirect('/news-category');
+                                res.redirect('/role');
                             });
                         }
                     });
                 } catch (e) {
-                    console.log(e);
+                    next(e);
                 }
             }
         });
     } catch (e) {
-       console.log(e);
+       next(e);
     }
 }
 

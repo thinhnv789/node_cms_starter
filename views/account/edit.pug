@@ -5,6 +5,8 @@ block stylesheets
     link(rel='stylesheet', href='/libs/bootstrap-chosen/bootstrap-chosen.css')
     link(rel='stylesheet', href='/libs/cropperjs/dist/cropper.min.css')
     link(rel='stylesheet', href='/stylesheets/cropper-editor.css')
+    style.
+        #select_roles_chosen{width: 100% !important}
 block javascripts
     script(type='text/javascript', src='/libs/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js')
     script(type='text/javascript', src='/libs/bootstrap-chosen/dist/chosen.jquery-1.4.2/chosen.jquery.min.js')
@@ -34,6 +36,7 @@ block javascripts
             }
         });
         $('#select-status').chosen({disable_search: true});
+        $('#select-roles').chosen({});
 
 block content
     include ./form
@@ -56,10 +59,4 @@ block content
     section.content
         .row
             .col-lg-12.col-md-12
-                .box.box-warning
-                    .box-header.with-border
-                        h3.box-title Cập nhật thông tin tài khoản
-                    // /.box-header
-                    .box-body
-                        +form(data ? data : {})
-                    // /.box-body
+                +form(data ? data : {}, roles ? roles : [], permissions ? permissions : [])

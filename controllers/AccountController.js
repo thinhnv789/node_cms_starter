@@ -1,4 +1,7 @@
+const async = require('async');
 const UserModel = require('./../models/User');
+const RoleModel = require('./../models/Role');
+const PermissionModel = require('./../models/Permission');
 
 const moment = require('moment');
 /**
@@ -97,12 +100,15 @@ exports.getSearch = async (req, res, next) => {
  */
 exports.getCreate = (req, res, next) => {
     try {
-        res.render('account/create', {
-            title: 'Tạo tài khoản',
-            current: 'account',
+        RoleModel.find({}).exec((err, roles) => {
+            res.render('account/create', {
+                title: 'Tạo tài khoản',
+                current: 'account',
+                roles
+            });
         });
     } catch (e) {
-       
+       next(e);
     }
 }
 
@@ -166,15 +172,27 @@ exports.postCreate = (req, res, next) => {
  */
 exports.getEdit = (req, res, next) => {
     try {
-        UserModel.findById(req.params.accountId).exec((err, account) => {
+        async.parallel({
+            account: function(cb) {
+                UserModel.findById(req.params.accountId).exec(cb)
+            },
+            roles: function(cb) {
+                RoleModel.find({}).exec(cb)
+            },
+            permissions: function(cb) {
+                PermissionModel.find({status: 1}).exec(cb)
+            }
+        }, function(err, results) {
             res.render('account/edit', {
                 title: 'Sửa thông tin tài khoản',
                 current: 'account',
-                data: account
+                data: results.account,
+                roles: results.roles,
+                permissions: results.permissions
             });
         });
     } catch (e) {
-       
+       next(e);
     }
 }
 
