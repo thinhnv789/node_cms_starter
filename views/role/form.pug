@@ -1,0 +1,52 @@
+mixin form(data={})
+    .box.box-warning
+        form.form-horizontal(role='form', method='POST', action=data._id ? '/role/update/' + data._id : '/role/create')
+            .box-header.with-border
+                h3.box-title Thông tin vai trò
+            // /.box-header
+            .box-body
+                .form-group
+                    .col-lg-6.col-md-6(class=errors && errors.roleName && 'has-error')
+                        label.control-label Role Name
+                        input.form-control(type='text', name='roleName', value=(data.current.roleName || ''), placeholder='Enter Role Name')
+                        if errors && errors.roleName
+                            span.help-block #{errors.roleName.msg}
+                    .col-lg-2.col-md-2(class=errors && errors.status && 'has-error')
+                        label.control-label Status
+                        select#select-status.form-control(name='status')
+                            option(value=1, selected=(data.current.status == 1) ? true : false) Active
+                            option(value=0, selected=(data.current.status == 0) ? true : false) Inactive
+                .form-group
+                    .col-lg-12.col-md-12
+                        label.control-label Permissions:
+                        - for (var i = 0; i < data.permissions.length; i = i+3) {
+                            .row
+                                .col-lg-4.col-md-4
+                                    .checkbox
+                                        label
+                                            input(type='checkbox', name='permissions', value=data.permissions[i]._id)
+                                            span.cr
+                                                i.cr-icon.fa.fa-rocket
+                                            | #{data.permissions[i].permissionName}
+                                if data.permissions[i+1]
+                                    .col-lg-4.col-md-4
+                                        .checkbox
+                                            label
+                                                input(type='checkbox', name='permissions', value=data.permissions[i+1]._id)
+                                                span.cr
+                                                    i.cr-icon.fa.fa-rocket
+                                                | #{data.permissions[i+1].permissionName}
+                                if data.permissions[i+2]
+                                    .col-lg-4.col-md-4
+                                        .checkbox
+                                            label
+                                                input(type='checkbox', name='permissions', value=data.permissions[i+2]._id)
+                                                span.cr
+                                                    i.cr-icon.fa.fa-rocket
+                                                | #{data.permissions[i+2].permissionName}
+                        - }
+                // Box footer        
+            .box-footer
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-check
+                    |&nbsp;#{data._id ? 'Cập nhật' : 'Tạo mới'}

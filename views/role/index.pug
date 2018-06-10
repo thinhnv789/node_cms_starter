@@ -7,25 +7,13 @@ block javascripts
     script(type='text/javascript', src='/libs/bootstrap-chosen/dist/chosen.jquery-1.4.2/chosen.jquery.min.js')
     script(src='/javascripts/data-table.js')
     script(type='text/javascript').
-        let categories = !{JSON.stringify(categories)};
-
         let dataTable = new DataTable({
-            selector: '#table-news',
-            urlFilter: '/news/search',
+            selector: '#table-roles',
+            urlFilter: '/role/search',
             filters: [
                 {
-                    name: 'title',
+                    name: 'roleName',
                     type: 'text'
-                },
-                {
-                    name: 'category',
-                    type: 'select',
-                    key: '_id',
-                    value: 'categoryName',
-                    placeholder: 'Danh mục',
-                    style: 'width:180px;',
-                    search: true,
-                    options: categories
                 },
                 {
                     name: 'statusDisplay',
@@ -38,11 +26,11 @@ block javascripts
                     options: [
                         {
                             value: 1,
-                            text: 'Public'
+                            text: 'Active'
                         },
                         {
                             value: 0,
-                            text: 'Draft'
+                            text: 'Inactive'
                         }
                     ]
                 }
@@ -53,18 +41,18 @@ block content
     // Content Header (Page header)
     section.content-header
       h1
-        | Bài viết
+        | Vai trò
       ol.breadcrumb
         li
           a(href='/')
             i.fa.fa-dashboard
             |  Dashboard
-        li.active Bài viết
+        li.active Role
     // Main content
     section.content
         .row
             .col-xs-12
-                a.btn.btn-success(href='/news/create') Tạo mới
+                a.btn.btn-success(href='/role/create') Tạo mới
                 hr
                 .box
                     .box-header
@@ -77,31 +65,21 @@ block content
                                         i.fa.fa-search
                     // /.box-header
                     .box-body.table-responsive.no-padding
-                        table#table-news.table.table-hover
+                        table#table-roles.table.table-hover
                             thead
                                 tr
                                     th(name='STT') STT
-                                    th(name='title') Tiêu đề
-                                    th(name='images') Ảnh
-                                    th(name='category') Danh mục
+                                    th(name='roleName') Role Name
                                     th(name='statusDisplay') Trạng thái
-                                    th.text-center(name='actions', actions={view: '/news/view', edit: '/news/edit', delete: '/news/delete'}, style='width: 140px;') Hành động
+                                    th.text-center(name='actions', actions={edit: '/role/edit', delete: '/role/delete'}, style='width: 140px;') Hành động
                             tbody
                                 each dt, i in data
                                     tr
                                         td #{i+1}
-                                        td #{dt.title}
-                                        td
-                                            if dt.images
-                                                img(src=dt.imageUrl, style='width: 100px;')
-                                            else
-                                                | No Image
-                                        td #{dt.category.categoryName}
+                                        td #{dt.roleName}
                                         td #{dt.statusDisplay}
                                         td.text-center
-                                            a.user-action.btn.btn-default(href='/news/view/' + dt._id)
-                                                em.fa.fa-eye
-                                            a.user-action.btn.btn-success(href='/news/edit/' + dt._id)
+                                            a.user-action.btn.btn-success(href='/role/edit/' + dt._id)
                                                 em.fa.fa-pencil
-                                            button.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Bạn có chắc chắn muốn xóa bài viết này không?", "/news/delete/' + dt._id + '")')
+                                            button.user-action.btn.btn-danger(onclick='return confirmDelete(this, "Bạn có chắc chắn muốn xóa vai trò này không?", "/role/delete/' + dt._id + '")')
                                                 em.fa.fa-trash

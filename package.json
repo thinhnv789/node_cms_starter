@@ -6,8 +6,10 @@
     "start": "set HTTPS=true&&nodemon ./bin/www"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "bcrypt-nodejs": "0.0.3",
     "bootstrap": "^4.1.0",
+    "bootstrap-chosen": "^1.4.2",
     "bootstrap-datetime-picker": "^2.4.4",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "~1.4.3",

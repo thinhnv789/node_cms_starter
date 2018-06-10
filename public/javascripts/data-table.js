@@ -51,10 +51,11 @@ class DataTable {
                     case 'select':
                         let filterSelect = this.generateInputSelectOption(filter);
                         this.filterEls[filter.name].appendChild(filterSelect);
-                        new SelectOption({
-                            selector: '#filter_' + filter.name,
-                            search: filter.search
-                        })
+                        $('#filter_' + filter.name).chosen({disable_search: filter.search ? false : true})
+                        // new SelectOption({
+                        //     selector: '#filter_' + filter.name,
+                        //     search: filter.search
+                        // })
                         break;
                     default:
                         break;

@@ -1,11 +1,11 @@
 extends ../layout/default
 
 block stylesheets
-    link(rel='stylesheet', href='/stylesheets/select-option.css')
+    link(rel='stylesheet', href='/libs/bootstrap-chosen/bootstrap-chosen.css')
     link(rel='stylesheet', href='/libs/cropperjs/dist/cropper.min.css')
     link(rel='stylesheet', href='/stylesheets/cropper-editor.css')
 block javascripts
-    script(type='text/javascript', src='/javascripts/select-option.js')
+    script(type='text/javascript', src='/libs/bootstrap-chosen/dist/chosen.jquery-1.4.2/chosen.jquery.min.js')
     script(type='text/javascript', src='/libs/cropperjs/dist/cropper.min.js')
     script(type='text/javascript', src='/javascripts/cropper-editor.js')
     script(type='text/javascript').
@@ -23,10 +23,7 @@ block javascripts
                 cropBoxResizable: false
             }
         });
-        new SelectOption({
-            selector: '#select-status',
-            search: false
-        })
+        $('#select-status').chosen({disable_search: true});
 
 block content
     include ./form

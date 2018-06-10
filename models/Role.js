@@ -10,8 +10,20 @@ const roleSchema = new mongoose.Schema({
     permissions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Permission'}],
     users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    updatedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     status: Boolean,
 }, {timestamps: true, usePushEach: true});
+
+roleSchema.set('toJSON', {
+    virtuals: true
+});
+
+/**
+ * Function get status
+ */
+roleSchema.virtual('statusDisplay').get(function () {
+    return (this.status ? 'Active' : 'Inactive');
+});
 
 const Role = mongoose.model('Role', roleSchema);
 

@@ -1,7 +1,7 @@
-const NewsCategoryModel = require('./../models/NewsCategory');
-const NewsModel = require('./../models/News');
+const async = require('async');
+const PermissionModel = require('./../models/Permission');
+const RoleModel = require('./../models/Role');
 
-const moment = require('moment');
 /**
  * 
  * @param {*} req 
@@ -10,15 +10,15 @@ const moment = require('moment');
  */
 exports.getIndex = (req, res, next) => {
     try {
-        NewsCategoryModel.find({}).exec((err, newsCategories) => {
-            res.render('news-category/index', {
-                title: 'Danh mục tin tức',
-                current: 'news-category',
-                data: newsCategories
+        RoleModel.find({}).exec((err, roles) => {
+            res.render('role/index', {
+                title: 'Vai trò',
+                current: 'role',
+                data: roles
             });
         })
     } catch (e) {
-       return res.redirect('404');
+       next(e);
     }
 };
 
@@ -57,11 +57,17 @@ exports.getSearch = (req, res, next) => {
  * @param {*} res 
  * @param {*} next 
  */
-exports.getCreate = (req, res, next) => {
+exports.getCreate = async (req, res, next) => {
     try {
-        res.render('news-category/create', {
-            title: 'Thêm danh mục bài viết',
-            current: 'news-category',
+        let permissions = await PermissionModel.find({status: 1});
+
+        res.render('role/create', {
+            title: 'Thêm vai trò',
+            current: 'role',
+            data: {
+                current: {},
+                permissions: permissions
+            }
         });
     } catch (e) {
        
@@ -70,43 +76,46 @@ exports.getCreate = (req, res, next) => {
 
 exports.postCreate = (req, res, next) => {
     try {
-        req.checkBody('categoryName', 'Tên danh mục không được để trống').notEmpty();
-        
+        req.checkBody('roleName', 'Enter Role Name').notEmpty();
         req.getValidationResult().then(function (errors) {
             if (!errors.isEmpty()) {
                 var errors = errors.mapped();
-    
-                res.render('news-category/create', {
-                    title: 'Thêm danh mục bài viết',
-                    errors: errors,
-                    data: req.body
+
+                PermissionModele.find({}).exec((err, permissions) => {
+                    res.render('role/create', {
+                        title: 'Thêm vai trò',
+                        errors: errors,
+                        data: {
+                            current: req.body,
+                            permissions: permissions
+                        }
+                    });
                 });
             } else {
                 try {
                     let postData = {
-                        categoryName: req.body.categoryName || null,
-                        slug: req.body.slug || category.slug,
-                        description: req.body.description || null,
+                        roleName: req.body.roleName || null,
                         status: req.body.status || 0,
+                        permissions: req.body.permissions || [],
                         createdBy: req.session.user._id
                     }
-                    let newRecord = new NewsCategoryModel(postData);
+                    let newRecord = new RoleModel(postData);
                     newRecord.save((err, result) => {
                         if (err) {
                             console.log('err', err);
                             req.flash('errors', 'Có lỗi xảy ra. Vui lòng thử lại' + JSON.stringify(err));
-                            return res.redirect('/news-category');
+                            return res.redirect('/role');
                         }
-                        req.flash('success', 'Danh mục ' + result.categoryName + ' đã được tạo');
-                        return res.redirect('/news-category');
+                        req.flash('success', 'Đã thêm vai trò thành công');
+                        return res.redirect('/role');
                     });
                 } catch (e) {
-
+                    next(e);
                 }
             }
         });
     } catch (e) {
-       
+       next(e);
     }
 }
 
@@ -118,15 +127,25 @@ exports.postCreate = (req, res, next) => {
  */
 exports.getEdit = (req, res, next) => {
     try {
-        NewsCategoryModel.findById(req.params.categoryId).exec((err, category) => {
-            res.render('news-category/edit', {
-                title: 'Sửa thông tin danh mục',
-                current: 'news-category',
-                data: category
+        async.parallel({
+            role: function(cb) {
+                RoleModel.findById(req.params.roleId).exec(cb)
+            },
+            permissions: function(cb) {
+                PermissionModel.find({status: 1}).exec(cb)
+            }
+        }, function(err, results) {
+            res.render('role/edit', {
+                title: 'Sửa thông vai trò',
+                current: 'role',
+                data: {
+                    current: results.role,
+                    permissions: results.permissions
+                }
             });
         });
     } catch (e) {
-       
+       next(e);
     }
 }
 

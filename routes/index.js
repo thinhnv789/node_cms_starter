@@ -1,6 +1,7 @@
 var appRouters = function(app) {
     const dashboardRouter = require('./dashboard');
     const permissionRouter = require('./permission');
+    const roleRouter = require('./role');
     const newsCategoryRouter = require('./news-category');
     const newsRouter = require('./news');
     const accountRouter = require('./account');
@@ -11,6 +12,7 @@ var appRouters = function(app) {
 
     app.use('/', dashboardRouter);
     app.use('/permission', permissionRouter);
+    app.use('/role', roleRouter);
     app.use('/news-category', newsCategoryRouter);
     app.use('/news', newsRouter);
     app.use('/account', accountRouter);
