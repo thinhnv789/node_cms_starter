@@ -142,9 +142,12 @@ exports.postCreate = (req, res, next) => {
                         email: req.body.email || null,
                         avatar: req.body.avatar || null,
                         birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : null,
+                        roles: req.body.roles || [],
+                        permissions: req.body.permissions || [],
                         password: req.body.password || null,
                         status: req.body.status || 0
                     }
+                    
                     let newRecord = new UserModel(postData);
                     newRecord.save((err, result) => {
                         if (err) {
@@ -204,6 +207,8 @@ exports.postUpdate = (req, res, next) => {
         req.checkBody('email', 'Email không được để trống').notEmpty();
         req.assert('email', 'Email không đúng').isEmail();
         req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+
+        console.log('roles', req.body.roles);
         
         req.getValidationResult().then(function (errors) {
             if (!errors.isEmpty()) {
@@ -214,32 +219,42 @@ exports.postUpdate = (req, res, next) => {
             } else {
                 try {
                     console.log('req', req.body.birthDay);
-                    let newData = {
-                        firstName: req.body.firstName || null,
-                        lastName: req.body.lastName || null,
-                        userName: req.body.userName || null,
-                        email: req.body.email || null,
-                        avatar: req.body.avatar || null,
-                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : null,
-                        status: req.body.status || 0
-                    }
-                    console.log('tt', newData);
-                    UserModel.updateOne({_id: req.params.accountId}, newData).exec((err) => {
+                    UserModel.findById({_id: req.params.accountId}).exec((err, user) => {
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
                             res.redirect('/account/edit/' + req.params.accountId);
                         } else {
-                            req.flash('success', 'Cập nhật thành công');
-                            res.redirect('/account');
+                            let newData = {
+                                firstName: req.body.firstName || user.firstName,
+                                lastName: req.body.lastName || user.lastName,
+                                userName: req.body.userName || user.userName,
+                                email: req.body.email || user.email,
+                                avatar: req.body.avatar || user.avatar,
+                                birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : user.birthDay,
+                                roles: req.body.roles || user.roles || [],
+                                permissions: req.body.permissions || user.permissions || [],
+                                status: req.body.status || user.status
+                            }
+
+                            user = Object.assign(user, newData);
+
+                            user.save((err) => {
+                                if (err) {
+                                    req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                                    return res.redirect('/account/edit/' + req.params.accountId);
+                                }
+                                req.flash('success', 'Cập nhật thành công');
+                                res.redirect('/account');
+                            });
                         }
                     });
                 } catch (e) {
-                    console.log(e);
+                    next(e);
                 }
             }
         });
     } catch (e) {
-       console.log(e);
+       next(e);
     }
 }
 
@@ -271,7 +286,7 @@ exports.getProfile = async (req, res, next) => {
             data: data
         })
     } catch (e) {
-        console.log(e);
+        next(e)
     }
 }
 
@@ -314,11 +329,11 @@ exports.postUpdateProfile = (req, res, next) => {
                         }
                     });
                 } catch (e) {
-                    console.log(e);
+                    next(e);
                 }
             }
         });
     } catch (e) {
-       console.log(e);
+       next(e);
     }
 }

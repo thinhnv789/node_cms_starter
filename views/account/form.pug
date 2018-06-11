@@ -72,11 +72,11 @@ mixin form(data={})
                         .form-group
                             .col-lg-12.col-md-12(class=errors && errors.roles && 'has-error')
                                 label.control-label Vai trò
-                                select#select-roles.form-control(name='roles', data-placeholder="Chọn vai trò")
+                                select#select-roles.form-control(name='roles', data-placeholder="Chọn vai trò", multiple=true)
                                     option(value='')
                                     if roles
                                         each role, i in roles
-                                            option(value=role._id) #{role.roleName}
+                                            option(value=role._id, selected=(data.roles && data.roles.indexOf(role._id) > -1) ? true : false) #{role.roleName}
                                 if errors && errors.roles
                                     span.help-block #{errors.roles.msg}
                         .form-group

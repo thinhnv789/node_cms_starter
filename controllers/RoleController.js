@@ -60,14 +60,11 @@ exports.getSearch = (req, res, next) => {
 exports.getCreate = async (req, res, next) => {
     try {
         let permissions = await PermissionModel.find({status: 1});
-
+        console.log('permissions', permissions);
         res.render('role/create', {
             title: 'Thêm vai trò',
             current: 'role',
-            data: {
-                current: {},
-                permissions: permissions
-            }
+            permissions: permissions
         });
     } catch (e) {
        
