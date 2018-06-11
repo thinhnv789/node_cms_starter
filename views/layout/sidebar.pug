@@ -1,4 +1,15 @@
 // Left side column. contains the sidebar
+- function checkPermission (accessRouter){
+-	if (!userPermissions) {
+-		return true;	
+-	}
+-   for (let i=0; i<userPermissions.length; i++) {
+-		if (userPermissions[i].indexOf(accessRouter) > -1) {
+-			return true;	
+-		}
+-	}
+-   return false;
+- }
 aside.main-sidebar
 	// sidebar: style can be found in sidebar.less
 	section.sidebar
@@ -23,61 +34,66 @@ aside.main-sidebar
 		ul.sidebar-menu(data-widget='tree')
 			li.header
 				i.fa.fa-bars &nbsp;&nbsp;MAIN MENU
-			li(class=(current == 'dashboard') ? 'active' : null)
-				a(href='/')
-					i.fa.fa-dashboard
-					span Dashboard
-			li.treeview(class=(current == 'news-category' || current == 'news') ? 'active' : null)
-				a(href='#')
-					i.fa.fa-newspaper-o
-					span Tin tức
-					span.pull-right-container
-						i.fa.fa-angle-left.pull-right
-				ul.treeview-menu
-					li(class=(current == 'news-category') ? 'active' : null)
-						a(href='/news-category')
-							i.fa.fa-briefcase
-							|  Danh mục
-					li(class=(current == 'news') ? 'active' : null)
-						a(href='/news')
-							i.fa.fa-pencil
-							|  Bài viết
-			li(class=(current == 'group-chat') ? 'active' : null)
-				a(href='/group-chat')
-					i.fa.fa-comment
-					span Nhóm Chat
+			if (checkPermission('/'))
+				li(class=(current == 'dashboard') ? 'active' : null)
+					a(href='/')
+						i.fa.fa-dashboard
+						span Dashboard
+			if (checkPermission('news-category') || checkPermission('news'))
+				li.treeview(class=(current == 'news-category' || current == 'news') ? 'active' : null)
+					a(href='#')
+						i.fa.fa-newspaper-o
+						span Tin tức
+						span.pull-right-container
+							i.fa.fa-angle-left.pull-right
+					ul.treeview-menu
+						li(class=(current == 'news-category') ? 'active' : null)
+							a(href='/news-category')
+								i.fa.fa-briefcase
+								|  Danh mục
+						li(class=(current == 'news') ? 'active' : null)
+							a(href='/news')
+								i.fa.fa-pencil
+								|  Bài viết
+			if (checkPermission('group-chat'))
+				li(class=(current == 'group-chat') ? 'active' : null)
+					a(href='/group-chat')
+						i.fa.fa-comment
+						span Nhóm Chat
 			li.header
 				i.fa.fa-cogs &nbsp;&nbsp;SETTINGS
-			li.treeview(class=(current == 'account' || current == 'login-manager') ? 'active' : null)
-				a(href='#')
-					i.fa.fa-user
-					span Tài khoản
-					span.pull-right-container
-						i.fa.fa-angle-left.pull-right
-				ul.treeview-menu
-					li(class=(current == 'account') ? 'active' : null)
-						a(href='/account')
-							i.fa.fa-list-alt
-							span Danh sách
-					li(class=(current == 'login-manager') ? 'active' : null)
-						a(href='/login-manager')
-							i.fa.fa-laptop
-							span Quản lý thiết bị
-			li.treeview(class=(current == 'role' || current == 'permission') ? 'active' : null)
-				a(href='#')
-					i.fa.fa-cogs
-					span Phân quyền
-					span.pull-right-container
-						i.fa.fa-angle-left.pull-right
-				ul.treeview-menu
-					li(class=(current == 'role') ? 'active' : null)
-						a(href='/role')
-							i.fa.fa-users
-							span Vai trò
-					li(class=(current == 'permission') ? 'active' : null)
-						a(href='/permission')
-							i.fa.fa-user-secret
-							span Quyền truy cập
+			if (checkPermission('account') || checkPermission('login-manager'))
+				li.treeview(class=(current == 'account' || current == 'login-manager') ? 'active' : null)
+					a(href='#')
+						i.fa.fa-user
+						span Tài khoản
+						span.pull-right-container
+							i.fa.fa-angle-left.pull-right
+					ul.treeview-menu
+						li(class=(current == 'account') ? 'active' : null)
+							a(href='/account')
+								i.fa.fa-list-alt
+								span Danh sách
+						li(class=(current == 'login-manager') ? 'active' : null)
+							a(href='/login-manager')
+								i.fa.fa-laptop
+								span Quản lý thiết bị
+			if (checkPermission('role') || checkPermission('permission'))
+				li.treeview(class=(current == 'role' || current == 'permission') ? 'active' : null)
+					a(href='#')
+						i.fa.fa-cogs
+						span Phân quyền
+						span.pull-right-container
+							i.fa.fa-angle-left.pull-right
+					ul.treeview-menu
+						li(class=(current == 'role') ? 'active' : null)
+							a(href='/role')
+								i.fa.fa-users
+								span Vai trò
+						li(class=(current == 'permission') ? 'active' : null)
+							a(href='/permission')
+								i.fa.fa-user-secret
+								span Quyền truy cập
 			li.treeview(class=(current == 'config' || current == 'log') ? 'active' : null)
 				a(href='#')
 					i.fa.fa-cog

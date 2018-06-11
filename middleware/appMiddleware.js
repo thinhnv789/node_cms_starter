@@ -25,7 +25,7 @@ exports.isAuthenticated = (req, res, next) => {
  * Check permission route
  */
 exports.isAllowed = (req, res, next) => {
-    let isAllowed = false, permissions = req.session.permissions, originalUrl = req.originalUrl;
+    let isAllowed = false, permissions = req.session.permissions || [], originalUrl = req.originalUrl;
 
     for (let i=0; i<permissions.length; i++) {
         if (originalUrl.indexOf(permissions[i]) > -1) {
