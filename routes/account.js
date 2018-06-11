@@ -6,7 +6,7 @@ const AccountController = require('../controllers/AccountController');
 const middleware = require('../middleware/appMiddleware');
 
 /* GET account page. */
-router.get('/', middleware.isAuthenticated, AccountController.getIndex);
+router.get('/', middleware.isAuthenticated, middleware.isAllowed, AccountController.getIndex);
 
 router.get('/search', middleware.isAuthenticated, AccountController.getSearch);
 

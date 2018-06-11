@@ -20,3 +20,23 @@ exports.isAuthenticated = (req, res, next) => {
     req.session.redirectTo = accessRouter;
     return res.redirect(publicUrl);
 };
+
+/**
+ * Check permission route
+ */
+exports.isAllowed = (req, res, next) => {
+    let isAllowed = false, permissions = req.session.permissions, originalUrl = req.originalUrl;
+
+    for (let i=0; i<permissions.length; i++) {
+        if (originalUrl.indexOf(permissions[i]) > -1) {
+            isAllowed = true;
+            break;
+        }
+    }
+
+    if (isAllowed) {
+        next();
+    } else {
+        res.render('permission-denied');
+    }
+}

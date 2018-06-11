@@ -47,7 +47,17 @@ exports.postLogin = (req, res, next) => {
 
         UserModel.findOne({
             userName: req.body.userName
-        }, (err, user) => {
+        }).populate({
+            path: 'roles',
+            model: 'Role',
+            populate: {
+                path: 'permissions',
+                model: 'Permission'
+            }
+        }).populate({
+            path: 'permissions',
+            model: 'Permission'
+        }).exec((err, user) => {
             if (err) {
                 return res.redirect('/auth/login');
             }
@@ -62,15 +72,26 @@ exports.postLogin = (req, res, next) => {
                     return res.redirect('/auth/login');
                 }
                 if (isMatch) {
-                    /**
-                     * Using json web token gen token for client
-                     */
-                    var token = Auth.jwtCreateToken({
-                        userId: user.id
-                    });
-                    
-                    req.session.user = user;
+                    let permissions = [];
 
+                    if (user.roles) {
+                        for (let i=0; i< user.roles.length; i++) {
+                            if (user.roles[i].permissions) {
+                                for (let j=0; j<user.roles[i].permissions.length; j++) {
+                                    permissions.push(user.roles[i].permissions[j].accessRouter);
+                                }
+                            }
+                        }
+                    }
+
+                    if (user.permissions) {
+                        for (let k=0; k<user.permissions.length; k++) {
+                            permissions.push(user.permissions[k].accessRouter);
+                        }
+                    }
+
+                    req.session.user = user;
+                    req.session.permissions = permissions;
                     if (req.body.remember) {
                         req.session.remember = true;
                         req.session.cookie.maxAge = parseInt(process.env.SESSION_EXP);
@@ -79,6 +100,7 @@ exports.postLogin = (req, res, next) => {
                     if (global.io) {
                         global.io.sockets.emit('member_login', user.fullName + ' đã đăng nhập');
                     }
+
                     res.redirect(req.session.redirectTo || '/');
                 } else {
                     return res.redirect('/user/login');
@@ -87,7 +109,7 @@ exports.postLogin = (req, res, next) => {
             }
         })
     } catch (e) {
-       
+       next(e);
     }
 };
 

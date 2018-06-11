@@ -6,7 +6,7 @@ const DashboardController = require('../controllers/DashboardController');
 const middleware = require('../middleware/appMiddleware');
 
 /* GET home page. */
-router.get('/', middleware.isAuthenticated, DashboardController.getIndex);
+router.get('/', middleware.isAuthenticated, middleware.isAllowed, DashboardController.getIndex);
 
 router.get('/cropper', middleware.isAuthenticated, DashboardController.getCropper);
 
