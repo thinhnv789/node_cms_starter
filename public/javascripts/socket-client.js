@@ -1,7 +1,7 @@
 /*
 * Connect socket
 */
-const socket = io('http://192.168.1.68:8008');
+const socket = io('http://localhost:8080');
 
 socket.on('connect', () => {
     socket.on('hello', (data) => {

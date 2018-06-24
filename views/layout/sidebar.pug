@@ -72,14 +72,16 @@ aside.main-sidebar
 						span.pull-right-container
 							i.fa.fa-angle-left.pull-right
 					ul.treeview-menu
-						li(class=(current == 'account') ? 'active' : null)
-							a(href='/account')
-								i.fa.fa-list-alt
-								span Danh sách
-						li(class=(current == 'login-manager') ? 'active' : null)
-							a(href='/login-manager')
-								i.fa.fa-laptop
-								span Quản lý thiết bị
+						if (checkPermission('account'))
+							li(class=(current == 'account') ? 'active' : null)
+								a(href='/account')
+									i.fa.fa-list-alt
+									span Danh sách
+						if (checkPermission('login-manager'))
+							li(class=(current == 'login-manager') ? 'active' : null)
+								a(href='/login-manager')
+									i.fa.fa-laptop
+									span Quản lý thiết bị
 			if (checkPermission('role') || checkPermission('permission'))
 				li.treeview(class=(current == 'role' || current == 'permission') ? 'active' : null)
 					a(href='#')

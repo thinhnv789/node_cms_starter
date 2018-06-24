@@ -1,7 +1,7 @@
 /*
 * Connect socket
 */
-const socket = io('https://' + window.location.hostname, {
+const socket = io('http://' + window.location.hostname + ':8080', {
     transports: ['websocket']
 });
 
