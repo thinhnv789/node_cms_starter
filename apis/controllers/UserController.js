@@ -15,14 +15,14 @@ exports.getInfo = (req, res, next) => {
                 return res.json({
                     success: false,
                     errorCode: '001',
-                    message: global.i18n.__('ER_QUERY_DB')
+                    message: req.i18n.__('ER_QUERY_DB')
                 })
             }
             res.json({
                 success: true,
                 errorCode: 0,
                 data: user,
-                message: global.i18n.__('GET_USERINFO_SUCCESSFULLY')
+                message: req.i18n.__('GET_USERINFO_SUCCESSFULLY')
             })
         })
     } catch (e) {

@@ -27,7 +27,7 @@ exports.isAuthenticated = (req, res, next) => {
                 return res.json({
                     success: false,
                     errorCode: '403',
-                    message: global.i18n.__('REQUIRED_LOGIN')
+                    message: req.i18n.__('REQUIRED_LOGIN')
                 });
             }
         });

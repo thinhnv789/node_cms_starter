@@ -32,14 +32,14 @@ exports.postLogin = (req, res, next) => {
                 return res.json({
                     success: false,
                     errorCode: '001',
-                    message: global.i18n.__('ER_QUERY_DB')
+                    message: req.i18n.__('ER_QUERY_DB')
                 })
             }
             if (!user) {
                 return res.json({
                     success: false,
                     errorCode: '001',
-                    message: global.i18n.__('ER_USER_NOT_FOUND')
+                    message: req.i18n.__('ER_USER_NOT_FOUND')
                 })
             } else {
                 // check if password matches
@@ -48,7 +48,7 @@ exports.postLogin = (req, res, next) => {
                         return res.json({
                             success: false,
                             errorCode: '002',
-                            message: global.i18n.__('ER_WRONG_USERNAME_OR_PASSWORD')
+                            message: req.i18n.__('ER_WRONG_USERNAME_OR_PASSWORD')
                         })
                     }
                     if (isMatch) {
@@ -71,13 +71,13 @@ exports.postLogin = (req, res, next) => {
                             data: {
                                 token: token
                             },
-                            message: global.i18n.__('LOGIN_SUCCESSFULLY')
+                            message: req.i18n.__('LOGIN_SUCCESSFULLY')
                         })
                     } else {
                         return res.json({
                             success: false,
                             errorCode: '003',
-                            message: global.i18n.__('ER_WRONG_USERNAME_OR_PASSWORD')
+                            message: req.i18n.__('ER_WRONG_USERNAME_OR_PASSWORD')
                         })
                     }
                 })

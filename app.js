@@ -70,14 +70,16 @@ i18n.configure({
 // Pass user login to client
 app.use((req, res, next) => {
   // express helper for natively supported engines
-  if (process.env.I18N_LANG) {
-    try {
-      i18n.setLocale(process.env.I18N_LANG);   
-    } catch (e) {
-
+  try {
+    i18n.setLocale(process.env.I18N_LANG); // Set default language
+    // Set select lang
+    if (req.session.I18N_LANG) {
+      i18n.setLocale(req.session.I18N_LANG);
     }
+  } catch (e) {
+
   }
-  global.i18n = i18n;
+  req.i18n = i18n;
   res.locals.i18n = i18n;
  
   // Allow request from all domain

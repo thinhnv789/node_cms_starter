@@ -125,7 +125,7 @@ exports.getMessages = (req, res, next) => {
                 return res.json({
                     success: false,
                     errorCode: '001',
-                    message: global.i18n.__('ER_QUERY_DB')
+                    message: req.i18n.__('ER_QUERY_DB')
                 })
             }
             res.json({
@@ -176,7 +176,7 @@ exports.getRecentMessages = (req, res, next) => {
                 return res.json({
                     success: false,
                     errorCode: '001',
-                    message: global.i18n.__('ER_QUERY_DB')
+                    message: req.i18n.__('ER_QUERY_DB')
                 })
             }
             res.json({
