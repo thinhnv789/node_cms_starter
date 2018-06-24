@@ -4,7 +4,6 @@ const Auth = require('../helpers/auth');
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
-    let token = '';
     if (req.session.user) {
         // req.session.user.touch();
         return next();

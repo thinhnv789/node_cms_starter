@@ -1,5 +1,4 @@
-const passport = require('passport');
-const { Strategy: FacebookStrategy } = require('passport-facebook');
+const UserModel = require('./../models/User');
 const publicUrl = '/auth/login';
 /**
  * Login Required middleware.
@@ -25,18 +24,49 @@ exports.isAuthenticated = (req, res, next) => {
  * Check permission route
  */
 exports.isAllowed = (req, res, next) => {
-    let isAllowed = false, permissions = req.session.permissions || [], originalUrl = req.originalUrl;
+    let isAllowed = true, permissions = [], originalUrl = req.originalUrl.split('?')[0];
 
-    for (let i=0; i<permissions.length; i++) {
-        if (originalUrl.indexOf(permissions[i]) > -1) {
-            isAllowed = true;
-            break;
+    UserModel.findById(req.session.user._id).populate({
+        path: 'roles',
+        model: 'Role',
+        populate: {
+            path: 'permissions',
+            model: 'Permission'
         }
-    }
-
-    if (isAllowed) {
-        next();
-    } else {
-        res.render('permission-denied');
-    }
+    }).populate({
+        path: 'permissions',
+        model: 'Permission'
+    }).exec((err, user) => {
+        if (user.roles) {
+            for (let i=0; i< user.roles.length; i++) {
+                if (user.roles[i].permissions) {
+                    for (let j=0; j<user.roles[i].permissions.length; j++) {
+                        permissions.push(user.roles[i].permissions[j].accessRouter);
+                        if (originalUrl == user.roles[i].permissions[j].accessRouter) {
+                            console.log('role', user.roles[i].permissions[j].accessRouter);
+                            isAllowed = true;
+                        }
+                    }
+                }
+            }
+        }
+    
+        if (user.permissions) {
+            for (let k=0; k<user.permissions.length; k++) {
+                permissions.push(user.permissions[k].accessRouter);
+                if (originalUrl == user.permissions[k].accessRouter) {
+                    console.log('per', user.permissions[k].accessRouter);
+                    isAllowed = true;
+                }
+            }
+        }
+    
+        res.locals.userPermissions = permissions;
+        console.log('isAllowed', isAllowed);
+        if (isAllowed) {
+            next();
+        } else {
+            res.render('permission-denied');
+        }
+    });
 }

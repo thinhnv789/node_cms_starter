@@ -85,7 +85,6 @@ app.use((req, res, next) => {
   // Allow request from all domain
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.locals.user = req.session.user;
-  res.locals.userPermissions = req.session.permissions;
   next();
 });
 

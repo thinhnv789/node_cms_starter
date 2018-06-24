@@ -90,6 +90,9 @@ exports.postCreate = (req, res, next) => {
                         status: req.body.status || 0,
                         createdBy: req.session.user._id
                     }
+                    if (postData.accessRouter[0] != '/') {
+                        postData.accessRouter = '/' + postData.accessRouter;
+                    }
                     let newRecord = new PermissionModel(postData);
                     newRecord.save((err, result) => {
                         if (err) {

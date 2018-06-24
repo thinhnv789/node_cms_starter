@@ -5,7 +5,6 @@ const LogModel = require('./../models/Log');
 const UserModel = require('./../models/User');
 const LoginManager = require('./../models/LoginManager');
 
-const Auth = require('../helpers/auth');
 /**
  * 
  * @param {*} req 
@@ -47,16 +46,6 @@ exports.postLogin = (req, res, next) => {
 
         UserModel.findOne({
             userName: req.body.userName
-        }).populate({
-            path: 'roles',
-            model: 'Role',
-            populate: {
-                path: 'permissions',
-                model: 'Permission'
-            }
-        }).populate({
-            path: 'permissions',
-            model: 'Permission'
         }).exec((err, user) => {
             if (err) {
                 return res.redirect('/auth/login');
@@ -72,26 +61,7 @@ exports.postLogin = (req, res, next) => {
                     return res.redirect('/auth/login');
                 }
                 if (isMatch) {
-                    let permissions = [];
-
-                    if (user.roles) {
-                        for (let i=0; i< user.roles.length; i++) {
-                            if (user.roles[i].permissions) {
-                                for (let j=0; j<user.roles[i].permissions.length; j++) {
-                                    permissions.push(user.roles[i].permissions[j].accessRouter);
-                                }
-                            }
-                        }
-                    }
-
-                    if (user.permissions) {
-                        for (let k=0; k<user.permissions.length; k++) {
-                            permissions.push(user.permissions[k].accessRouter);
-                        }
-                    }
-
                     req.session.user = user;
-                    req.session.permissions = permissions;
                     if (req.body.remember) {
                         req.session.remember = true;
                         req.session.cookie.maxAge = parseInt(process.env.SESSION_EXP);
