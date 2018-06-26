@@ -100,11 +100,19 @@ exports.getSearch = async (req, res, next) => {
  */
 exports.getCreate = (req, res, next) => {
     try {
-        RoleModel.find({}).exec((err, roles) => {
+        async.parallel({
+            roles: function(cb) {
+                RoleModel.find({}).exec(cb)
+            },
+            permissions: function(cb) {
+                PermissionModel.find({status: 1}).exec(cb)
+            }
+        }, function(err, results) {
             res.render('account/create', {
                 title: 'Tạo tài khoản',
                 current: 'account',
-                roles
+                roles: results.roles,
+                permissions: results.permissions
             });
         });
     } catch (e) {

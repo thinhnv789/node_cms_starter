@@ -1,3 +1,8 @@
+/* Common css */
+.valign-middle {
+    vertical-align: middle !important;
+}
+
 /* crack froala editor lib*/
 .fr-box .show-placeholder div:first-child a, .fr-box .fr-wrapper div:first-child a {
   width: 0 !important;

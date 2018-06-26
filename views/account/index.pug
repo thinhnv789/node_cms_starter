@@ -24,9 +24,9 @@ block content
                     // /.box-header
                     .box-body.table-responsive.no-padding
                         #toolbar
-                            a.btn.btn-success(href='/account/create') Tạo mới
-                            button#remove.btn.btn-danger(disabled='') Delete
-                        table#table(data-toolbar='#toolbar', data-search='true', data-show-refresh='false', data-show-toggle='false', data-show-columns='true', data-show-export='true', data-detail-view='true', data-detail-formatter='detailFormatter', data-minimum-count-columns='2', data-show-pagination-switch='false', data-pagination='true', data-id-field='id', data-page-size='15', data-page-list='[15, 25, 50, 100, ALL]', data-side-pagination='server', data-url='http://issues.wenzhixin.net.cn/examples/bootstrap_table/data', data-response-handler='responseHandler')
+                            a.btn.btn-success(href='/account/create', style='margin: 0 5px') Tạo mới
+                            button#remove.btn.btn-danger(disabled='', style='margin: 0 5px') Delete
+                        table#table(data-toolbar='#toolbar', data-search='true', data-show-refresh='false', data-show-toggle='false', data-show-columns='true', data-show-export='true', data-detail-view='false', data-detail-formatter='detailFormatter', data-minimum-count-columns='2', data-show-pagination-switch='false', data-pagination='true', data-id-field='id', data-page-size='15', data-page-list='[15, 25, 50, 100, ALL]', data-side-pagination='server', data-url='/api/account/data', data-response-handler='responseHandler')
 
 block javascripts
     script(type='text/javascript', src='/libs/bootstrap-table/dist/bootstrap-table.min.js')
@@ -50,32 +50,36 @@ block javascripts
                         checkbox: true,
                         rowspan: 2,
                         align: 'center',
-                        valign: 'middle'
+                        valign: 'middle',
+                        class: 'valign-middle'
                     }, {
-                        title: 'Item ID',
-                        field: 'id',
+                        title: 'Avatar',
+                        field: 'avatar',
                         rowspan: 2,
                         align: 'center',
                         valign: 'middle',
-                        sortable: true
+                        events: avatarEvents,
+                        formatter: avatarFormatter
                     }, {
-                        title: 'Item Detail',
+                        title: 'Thông tin chi tiết',
                         colspan: 3,
                         align: 'center'
                     }
                 ],
                 [
                     {
-                        field: 'name',
-                        title: 'Item Name',
+                        field: 'fullName',
+                        title: 'Họ tên',
                         sortable: true,
                         editable: true,
-                        align: 'center'
+                        align: 'center',
+                        valign: 'middle'
                     }, {
-                        field: 'price',
-                        title: 'Item Price',
+                        field: 'email',
+                        title: 'Email',
                         sortable: true,
                         align: 'center',
+                        valign: 'middle',
                         editable: {
                             type: 'text',
                             title: 'Item Price',
@@ -98,6 +102,7 @@ block javascripts
                         field: 'operate',
                         title: 'Item Operate',
                         align: 'center',
+                        valign: 'middle',
                         events: operateEvents,
                         formatter: operateFormatter
                     }
@@ -149,6 +154,27 @@ block javascripts
             });
             return res;
         }
+        function avatarFormatter(value, row, index) {
+            console.log('valuettt', value);
+            console.log('rowttt', row);
+            console.log('indexttt', index);
+            let html = '';
+            html += '<a class="avatar" href="#" target="_blank" title="' + row.fullName + '">';
+            html += '<img class="img img-responsive" src="' + row.avatarUrl + '" style="width: 100px; height: 80px; margin: auto" />';
+            html += '</a>';
+            return html;
+        }
+        window.avatarEvents = {
+            //- 'click .like': function (e, value, row, index) {
+            //-     alert(`You click like action, row: ${JSON.stringify(row)}`);
+            //- },
+            //- 'click .remove': function(e, value, {id}, index) {
+            //-     $table.bootstrapTable('remove', {
+            //-     field: 'id',
+            //-     values: [id]
+            //-     });
+            //- }
+        };
         function detailFormatter(index, row) {
             const html = [];
             $.each(row, (key, value) => {
