@@ -30,6 +30,7 @@ var ioAuthenticatedEvents = function(io, socket) {
      * Event send message
      */
     socket.on('send_message', (data) => {
+        console.log('data send', data);
         try {
             data.sender = socket.user;
 
@@ -97,6 +98,7 @@ var ioAuthenticatedEvents = function(io, socket) {
 
 var ioEvents = function(io) {
     io.on('connection', (socket) => {
+        console.log('client connection');
         let user = {};
         if (socket.request.session && socket.request.session.user) {
             user = socket.request.session.user;
