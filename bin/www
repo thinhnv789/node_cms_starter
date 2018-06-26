@@ -7,6 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('cms-starter:server');
 const http = require('http');
+const redis = require('socket.io-redis');
 
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -41,6 +42,7 @@ if (cluster.isMaster) {
    * Create chat server
    */
   global.io.attach(server);
+  global.io.adapter(redis({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT }));
 
   /**
    * Listen on provided port, on all network interfaces.
