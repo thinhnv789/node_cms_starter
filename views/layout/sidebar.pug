@@ -1,12 +1,17 @@
 // Left side column. contains the sidebar
 - function checkPermission (accessRouter){
--	accessRouter = accessRouter.split('?')[0];
--	if (accessRouter[0] != '/') accessRouter = '/' + accessRouter;
+-	let accessRouterParams = accessRouter.split('/');
 -	if (!userPermissions) {
 -		return true;	
 -	}
 -   for (let i=0; i<userPermissions.length; i++) {
--		if (userPermissions[i] == accessRouter) {
+-		let permissionParams = userPermissions[i].split('/');
+-		for (let j=0; j<permissionParams.length; j++) {
+-			if (permissionParams[j] == '$' && accessRouterParams[j]) {
+-				accessRouterParams[j] = '$';
+-			}
+-		}
+-		if (accessRouterParams.join('/') == permissionParams.join('/')) {
 -			return true;	
 -		}
 -	}

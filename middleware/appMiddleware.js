@@ -62,7 +62,7 @@ exports.isAllowed = (req, res, next) => {
         }
     
         res.locals.userPermissions = permissions;
-        console.log('isAllowed', isAllowed);
+        console.log('isAllowed', permissions);
         if (isAllowed) {
             next();
         } else {

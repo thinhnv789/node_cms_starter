@@ -24,8 +24,8 @@ block content
                     // /.box-header
                     .box-body.table-responsive.no-padding
                         #toolbar
-                            a.btn.btn-success(href='/account/create', style='margin: 0 5px') Tạo mới
-                            button#remove.btn.btn-danger(disabled='', style='margin: 0 5px') Delete
+                            a.btn.btn-success(href='/account/create') Tạo mới
+                            button#remove.btn.btn-danger(disabled='', style='margin-left: 10px') Delete
                         table#table(data-toolbar='#toolbar', data-search='true', data-show-refresh='false', data-show-toggle='false', data-show-columns='true', data-show-export='true', data-detail-view='false', data-detail-formatter='detailFormatter', data-minimum-count-columns='2', data-show-pagination-switch='false', data-pagination='true', data-id-field='id', data-page-size='15', data-page-list='[15, 25, 50, 100, ALL]', data-side-pagination='server', data-url='/api/account/data', data-response-handler='responseHandler')
 
 block javascripts
@@ -103,7 +103,7 @@ block javascripts
                         title: 'Item Operate',
                         align: 'center',
                         valign: 'middle',
-                        events: operateEvents,
+                        //- events: operateEvents,
                         formatter: operateFormatter
                     }
                 ]
@@ -183,26 +183,16 @@ block javascripts
             return html.join('');
         }
         function operateFormatter(value, row, index) {
-            return [
-            '<a class="like" href="javascript:void(0)" title="Like">',
-            '<i class="glyphicon glyphicon-heart"></i>',
-            '</a>  ',
-            '<a class="remove" href="javascript:void(0)" title="Remove">',
-            '<i class="glyphicon glyphicon-remove"></i>',
-            '</a>'
-            ].join('');
+            let html = '';
+            html += '<a class="view" href="/account/view/' + row._id + '" target="_blank" title="View">';
+            html += '<i class="fa fa-eye"></i>';
+            html += '</a>';
+            html += '<span>&nbsp;&nbsp;</span>'
+            html += '<a class="edit" href="/account/edit/' + row._id + '" target="_blank" title="Edit">';
+            html += '<i class="fa fa-edit"></i>';
+            html += '</a>';
+            return html;
         }
-        window.operateEvents = {
-            'click .like': function (e, value, row, index) {
-                alert(`You click like action, row: ${JSON.stringify(row)}`);
-            },
-            'click .remove': function(e, value, {id}, index) {
-                $table.bootstrapTable('remove', {
-                field: 'id',
-                values: [id]
-                });
-            }
-        };
         function totalPriceFormatter(data) {
             let total = 0;
             $.each(data, (i, {price}) => {
