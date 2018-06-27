@@ -116,12 +116,30 @@ var ioAuthenticatedEvents = function(io, socket) {
     })
 }
 
-var ioEvents = function(io) {
-    io.on('connection', (socket) => {
-        console.log('client connection');
-        let user = {};
-        if (socket.request.session && socket.request.session.user) {
-            user = socket.request.session.user;
+io.on('connection', (socket) => {
+    console.log('client connection');
+    let user = {};
+    if (socket.request.session && socket.request.session.user) {
+        user = socket.request.session.user;
+        if (user && user._id) {
+            socket.user = user;
+            ioAuthenticatedEvents(io, socket);
+        } else {
+            console.log('server disconnect');
+            socket.emit('authenticate_failed');
+            // socket.disconnect(true);
+        }
+    } else {
+        let token = socket.handshake.query.token || socket.handshake.headers['x-access-token'] || socket.handshake.headers['Authorization'] || socket.handshake.headers['authorization'];
+    
+        /**
+         * Remove bearer or basic
+         */
+        if (token){
+            token = token.split(' ');
+            token = token[token.length - 1];
+        }
+        Auth.jwtVerifyToken(token, user => {
             if (user && user._id) {
                 socket.user = user;
                 ioAuthenticatedEvents(io, socket);
@@ -130,28 +148,8 @@ var ioEvents = function(io) {
                 socket.emit('authenticate_failed');
                 // socket.disconnect(true);
             }
-        } else {
-            let token = socket.handshake.query.token || socket.handshake.headers['x-access-token'] || socket.handshake.headers['Authorization'] || socket.handshake.headers['authorization'];
-        
-            /**
-             * Remove bearer or basic
-             */
-            if (token){
-                token = token.split(' ');
-                token = token[token.length - 1];
-            }
-            Auth.jwtVerifyToken(token, user => {
-                if (user && user._id) {
-                    socket.user = user;
-                    ioAuthenticatedEvents(io, socket);
-                } else {
-                    console.log('server disconnect');
-                    socket.emit('authenticate_failed');
-                    // socket.disconnect(true);
-                }
-            });
-        }
-    })
-}
+        });
+    }
+});
 
 module.exports = io;
