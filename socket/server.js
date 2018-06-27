@@ -1,11 +1,31 @@
+const io = require('socket.io')();
 const platform = require('platform');
+const session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+
 const Auth = require('./../helpers/auth');
 const LoginManager = require('./../models/LoginManager');
 const Message = require('./../models/Message');
 const RecentMessage = require('./../models/RecentMessage');
 
+var sessionMiddleware = session({
+    resave: true,
+    rolling : true,
+    saveUninitialized: false,
+    secret: process.env.SECRET, // realtime chat system
+    cookie:{ maxAge: parseInt(process.env.SESSION_EXP) },
+    store: new MongoStore({
+      url: process.env.MONGO_DB,
+      autoReconnect: true,
+    })
+});
+io.use(function(socket, next) {
+    sessionMiddleware(socket.request, {}, next);
+});
+
 var ioAuthenticatedEvents = function(io, socket) {
     /* User join to personal room */
+    console.log('socket userId', socket.user._id);
     socket.join(socket.user._id);
     /* Ignore duplicate connection when restart server */
     // io.removeAllListeners();
@@ -134,4 +154,4 @@ var ioEvents = function(io) {
     })
 }
 
-module.exports = ioEvents;
+module.exports = io;

@@ -5,8 +5,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var io = require('socket.io')();
-var ioEvents = require('./socket/server')(io);
 var appRouters = require('./routes/index');
 var apiRouters = require('./apis/routers/index');
 var logger = require('morgan');
@@ -51,9 +49,6 @@ var sessionMiddleware = session({
     url: process.env.MONGO_DB,
     autoReconnect: true,
   })
-});
-io.use(function(socket, next) {
-  sessionMiddleware(socket.request, {}, next);
 });
 app.use(sessionMiddleware);
 app.use(passport.initialize());
@@ -122,7 +117,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-global.io = io;
 
 module.exports = app;
