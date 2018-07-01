@@ -4,7 +4,7 @@ const session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
 const Auth = require('./../helpers/auth');
-const LoginManager = require('./../models/LoginManager');
+// const LoginManager = require('./../models/LoginManager');
 const Message = require('./../models/Message');
 const RecentMessage = require('./../models/RecentMessage');
 
@@ -28,7 +28,7 @@ var ioAuthenticatedEvents = function(socket) {
     console.log('socket userId', socket.user._id);
     socket.join(socket.user._id);
     /* Ignore duplicate connection when restart server */
-    // io.removeAllListeners();
+    socket.removeAllListeners();
 
     /**
      * Update login manager collections
@@ -109,11 +109,11 @@ var ioAuthenticatedEvents = function(socket) {
      */
     socket.on('disconnect', () => {
         /* Remove device login */
-        LoginManager.findOne({sessionId: io.sessionID}).exec((err, deviceLogin) => {
-            if (deviceLogin) {
-                deviceLogin.remove();
-            }
-        });
+        // LoginManager.findOne({sessionId: io.sessionID}).exec((err, deviceLogin) => {
+        //     if (deviceLogin) {
+        //         deviceLogin.remove();
+        //     }
+        // });
     })
 }
 

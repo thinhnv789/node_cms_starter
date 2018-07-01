@@ -5,7 +5,7 @@ const socket = io('http://' + window.location.hostname + ':8080', {
     transports: ['websocket']
 });
 
-socket.on('connect', () => {    
+socket.once('connect', () => {    
     /* Notification member login */
     socket.on('member_login', (data) => {
         let notiSound = new Audio('/sounds/notification.mp3');
@@ -90,6 +90,7 @@ socket.on('connect', () => {
 
     /* Event socket disconnected from server */
     socket.on('disconnect', () => {
+        // socket.removeAllListeners();
         console.log('server disconnect');
     });
 });
