@@ -32,6 +32,9 @@ socket.on('connect', () => {
     socket.on('message', (data) => {
         console.log('message', data);
         let partner = data.sender;
+        if (data.isOwner) {
+            partner = data.recipient;
+        }
         let chatBox = document.getElementById('chatbox-' + partner._id);
 
         if (!chatBox) {
@@ -47,38 +50,43 @@ socket.on('connect', () => {
             let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
 
             if (chatboxContainer) {
-                let inboxMessageItem = createInboxMessage(data)
-                chatboxContainer.appendChild(inboxMessageItem);
+                let messageItem = null;
+                if (data.isOwner) {
+                    messageItem = createOwnerMessage(data);
+                } else {
+                    messageItem= createInboxMessage(data)
+                }
+                chatboxContainer.appendChild(messageItem);
                 chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
             }
         }
     });
 
     /* Event owner message */
-    socket.on('owner_message', (data) => {
-        let partner = data.recipient;
-        let chatBox = document.getElementById('chatbox-' + partner._id);
+    // socket.on('owner_message', (data) => {
+    //     let partner = data.recipient;
+    //     let chatBox = document.getElementById('chatbox-' + partner._id);
 
-        if (!chatBox) {
-            chatBox = createNewChatBox(partner);
+    //     if (!chatBox) {
+    //         chatBox = createNewChatBox(partner);
 
-            let chatContainer = document.getElementById('chat-container');
+    //         let chatContainer = document.getElementById('chat-container');
 
-            if (chatContainer) {
-                chatContainer.appendChild(chatBox);
-            }
-        } else {
-            chatBox.style = 'display: inline-block';
-        }
+    //         if (chatContainer) {
+    //             chatContainer.appendChild(chatBox);
+    //         }
+    //     } else {
+    //         chatBox.style = 'display: inline-block';
+    //     }
 
-        let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
+    //     let chatboxContainer = document.querySelector('#chatbox-' + partner._id + ' .box-container');
 
-        if (chatboxContainer) {
-            let ownerMessageItem = createOwnerMessage(data)
-            chatboxContainer.appendChild(ownerMessageItem);
-            chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
-        }
-    });
+    //     if (chatboxContainer) {
+    //         let ownerMessageItem = createOwnerMessage(data)
+    //         chatboxContainer.appendChild(ownerMessageItem);
+    //         chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
+    //     }
+    // });
 
     /* Event socket disconnected from server */
     socket.on('disconnect', () => {

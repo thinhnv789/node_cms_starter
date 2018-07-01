@@ -23,7 +23,7 @@ io.use(function(socket, next) {
     sessionMiddleware(socket.request, {}, next);
 });
 
-var ioAuthenticatedEvents = function(io, socket) {
+var ioAuthenticatedEvents = function(socket) {
     /* User join to personal room */
     console.log('socket userId', socket.user._id);
     socket.join(socket.user._id);
@@ -50,7 +50,7 @@ var ioAuthenticatedEvents = function(io, socket) {
      * Event send message
      */
     socket.on('send_message', (data) => {
-        console.log('data send', data);
+        // console.log('data send', data);
         try {
             data.sender = socket.user;
 
@@ -118,13 +118,12 @@ var ioAuthenticatedEvents = function(io, socket) {
 }
 
 io.on('connection', (socket) => {
-    console.log('client connection');
     let user = {};
     if (socket.request.session && socket.request.session.user) {
         user = socket.request.session.user;
         if (user && user._id) {
             socket.user = user;
-            ioAuthenticatedEvents(io, socket);
+            ioAuthenticatedEvents(socket);
         } else {
             console.log('server disconnect');
             socket.emit('authenticate_failed');
