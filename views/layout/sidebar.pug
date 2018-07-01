@@ -46,7 +46,7 @@ aside.main-sidebar
 					a(href='/')
 						i.fa.fa-dashboard
 						span Dashboard
-			if (checkPermission('news-category') || checkPermission('news'))
+			if (checkPermission('/news-category') || checkPermission('/news'))
 				li.treeview(class=(current == 'news-category' || current == 'news') ? 'active' : null)
 					a(href='#')
 						i.fa.fa-newspaper-o
@@ -62,14 +62,14 @@ aside.main-sidebar
 							a(href='/news')
 								i.fa.fa-pencil
 								|  Bài viết
-			if (checkPermission('group-chat'))
+			if (checkPermission('/group-chat'))
 				li(class=(current == 'group-chat') ? 'active' : null)
 					a(href='/group-chat')
 						i.fa.fa-comment
 						span Nhóm Chat
 			li.header
 				i.fa.fa-cogs &nbsp;&nbsp;SETTINGS
-			if (checkPermission('account') || checkPermission('login-manager'))
+			if (checkPermission('/account') || checkPermission('/login-manager'))
 				li.treeview(class=(current == 'account' || current == 'login-manager') ? 'active' : null)
 					a(href='#')
 						i.fa.fa-user
@@ -77,17 +77,17 @@ aside.main-sidebar
 						span.pull-right-container
 							i.fa.fa-angle-left.pull-right
 					ul.treeview-menu
-						if (checkPermission('account'))
+						if (checkPermission('/account'))
 							li(class=(current == 'account') ? 'active' : null)
 								a(href='/account')
 									i.fa.fa-list-alt
 									span Danh sách
-						if (checkPermission('login-manager'))
+						if (checkPermission('/login-manager'))
 							li(class=(current == 'login-manager') ? 'active' : null)
 								a(href='/login-manager')
 									i.fa.fa-laptop
 									span Quản lý thiết bị
-			if (checkPermission('role') || checkPermission('permission'))
+			if (checkPermission('/role') || checkPermission('permission/') || true)
 				li.treeview(class=(current == 'role' || current == 'permission') ? 'active' : null)
 					a(href='#')
 						i.fa.fa-cogs

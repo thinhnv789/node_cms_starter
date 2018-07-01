@@ -1,5 +1,5 @@
 const io = require('socket.io')();
-const platform = require('platform');
+// const platform = require('platform');
 const session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -33,18 +33,18 @@ var ioAuthenticatedEvents = function(io, socket) {
     /**
      * Update login manager collections
      */
-    const p = platform.parse(socket.request.headers['user-agent']);
+    // const p = platform.parse(socket.request.headers['user-agent']);
     
-    if (p) {
-        let newLogin = new LoginManager();
-        newLogin.user = socket.user._id;
-        newLogin.userName = socket.user.userName,
-        newLogin.fullName = socket.user.fullName,
-        newLogin.sessionId = io.sessionID;
-        newLogin.os = p.os;
-        newLogin.platform = p.name;
-        newLogin.save();
-    }
+    // if (p) {
+    //     let newLogin = new LoginManager();
+    //     newLogin.user = socket.user._id;
+    //     newLogin.userName = socket.user.userName,
+    //     newLogin.fullName = socket.user.fullName,
+    //     newLogin.sessionId = io.sessionID;
+    //     newLogin.os = p.os;
+    //     newLogin.platform = p.name;
+    //     newLogin.save();
+    // }
 
     /**
      * Event send message
@@ -63,7 +63,8 @@ var ioAuthenticatedEvents = function(io, socket) {
             /**
              * Event send message to sender
              */
-            io.to(socket.user._id).emit('owner_message', data);
+            data.isOwner = true;
+            io.to(socket.user._id).emit('message', data);
 
             /**
              * Save message to database
