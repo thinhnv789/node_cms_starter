@@ -1,0 +1,34 @@
+extends ../layout/default
+
+block stylesheets
+    link(rel='stylesheet', href='/libs/bootstrap-chosen/bootstrap-chosen.css')
+    style.
+        #select_roles_chosen{width: 100% !important}
+block javascripts
+    script(type='text/javascript', src='/libs/bootstrap-chosen/dist/chosen.jquery-1.4.2/chosen.jquery.min.js')
+    script.
+        $('#select-status').chosen({disable_search: true});
+        $('#select-roles').chosen({});
+
+block content
+    include ./permission-form
+    // Content Header (Page header)
+    section.content-header
+        h1
+            | Phân quyền
+            small Ahihi
+        ol.breadcrumb
+            li
+                a(href='/')
+                    i.fa.fa-dashboard
+                    |  Dashboard
+            li
+                a(href='/account')
+                    i.fa.fa-users
+                    |  Tài khoản
+            li.active Phân quyền
+    // Main content
+    section.content
+        .row
+            .col-lg-12.col-md-12
+                +permission-form(data ? data : {}, roles ? roles : [], permissions ? permissions : [])

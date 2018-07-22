@@ -18,6 +18,10 @@ router.get('/edit/:accountId', middleware.isAuthenticated, AccountController.get
 
 router.post('/update/:accountId', middleware.isAuthenticated, AccountController.postUpdate);
 
+router.get('/edit-role-permission/:accountId', middleware.isAuthenticated, AccountController.getEditRolePermission);
+
+router.post('/update-role-permission/:accountId', middleware.isAuthenticated, AccountController.postUpdateRolePermission);
+
 router.get('/delete/:accountId', middleware.isAuthenticated, AccountController.getDelete);
 
 router.get('/profile', middleware.isAuthenticated, AccountController.getProfile);

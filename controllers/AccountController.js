@@ -213,6 +213,7 @@ exports.postUpdate = (req, res, next) => {
         req.checkBody('firstName', 'Họ không được để trống').notEmpty();
         req.checkBody('lastName', 'Tên không được để trống').notEmpty();
         req.checkBody('userName', 'Tên đăng nhập không được để trống').notEmpty();
+        req.checkBody('birthDay', 'Nhập ngày tháng năm sinh').notEmpty();
         req.checkBody('email', 'Email không được để trống').notEmpty();
         req.assert('email', 'Email không đúng').isEmail();
         req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
@@ -240,13 +241,9 @@ exports.postUpdate = (req, res, next) => {
                     }
                     UserModel.cUpdate(req.params.accountId, newData, (err, user) => {
                         if (err) {
-                            req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                            req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại: ' + JSON.stringify(err));
                             res.redirect('/account/edit/' + req.params.accountId);
                         } else {
-                            if (err) {
-                                req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
-                                return res.redirect('/account/edit/' + req.params.accountId);
-                            }
                             /* Remove cache */
                             client.del('permissions_' + user._id);
                             /* End */
@@ -293,37 +290,20 @@ exports.getEditRolePermission = (req, res, next) => {
 exports.postUpdateRolePermission = (req, res, next) => {
     try {
         try {
-            console.log('req', req.body.birthDay);
-            UserModel.findById({_id: req.params.accountId}).exec((err, user) => {
+            let newData = {
+                roles: req.body.roles || [],
+                permissions: req.body.permissions || []
+            }
+            UserModel.cUpdate(req.params.accountId, newData, (err, user) => {
                 if (err) {
-                    req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                    req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại: ' + JSON.stringify(err));
                     res.redirect('/account/edit-role-permission/' + req.params.accountId);
                 } else {
-                    let newData = {
-                        firstName: req.body.firstName || user.firstName,
-                        lastName: req.body.lastName || user.lastName,
-                        userName: req.body.userName || user.userName,
-                        email: req.body.email || user.email,
-                        avatar: req.body.avatar || user.avatar,
-                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : user.birthDay,
-                        roles: req.body.roles || user.roles || [],
-                        permissions: req.body.permissions || [],
-                        status: req.body.status || user.status
-                    }
-
-                    user = Object.assign(user, newData);
-
-                    user.save((err) => {
-                        if (err) {
-                            req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
-                            return res.redirect('/account/edit/' + req.params.accountId);
-                        }
-                        /* Remove cache */
-                        client.del('permissions_' + user._id);
-                        /* End */
-                        req.flash('success', 'Cập nhật thành công');
-                        res.redirect('/account');
-                    });
+                    /* Remove cache */
+                    client.del('permissions_' + user._id);
+                    /* End */
+                    req.flash('success', 'Cập nhật thành công');
+                    res.redirect('/account');
                 }
             });
         } catch (e) {
