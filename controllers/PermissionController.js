@@ -93,8 +93,8 @@ exports.postCreate = (req, res, next) => {
                     if (postData.accessRouter[0] != '/') {
                         postData.accessRouter = '/' + postData.accessRouter;
                     }
-                    let newRecord = new PermissionModel(postData);
-                    newRecord.save((err, result) => {
+                    // let newRecord = new PermissionModel(postData);
+                    PermissionModel.createNew(postData, (err, result) => {
                         if (err) {
                             console.log('err', err);
                             req.flash('errors', 'Có lỗi xảy ra. Vui lòng thử lại' + JSON.stringify(err));

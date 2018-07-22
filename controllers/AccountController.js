@@ -1,4 +1,6 @@
 const async = require('async');
+const redis = require('redis');
+const client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 const UserModel = require('./../models/User');
 const RoleModel = require('./../models/Role');
 const PermissionModel = require('./../models/Permission');
@@ -156,8 +158,7 @@ exports.postCreate = (req, res, next) => {
                         status: req.body.status || 0
                     }
                     
-                    let newRecord = new UserModel(postData);
-                    newRecord.save((err, result) => {
+                    UserModel.cCreate(postData, (err, result) => {
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Vui lòng thử lại');
                             return res.redirect('/account');
@@ -226,34 +227,31 @@ exports.postUpdate = (req, res, next) => {
                 return res.redirect('/account/edit/' + req.params.accountId);
             } else {
                 try {
-                    console.log('req', req.body.birthDay);
-                    UserModel.findById({_id: req.params.accountId}).exec((err, user) => {
+                    let newData = {
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        userName: req.body.userName,
+                        email: req.body.email,
+                        avatar: req.body.avatar,
+                        birthDay: moment(req.body.birthDay, 'DDMMYYYY').format(),
+                        roles: req.body.roles || [],
+                        permissions: req.body.permissions || [],
+                        status: req.body.status
+                    }
+                    UserModel.cUpdate(req.params.accountId, newData, (err, user) => {
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
                             res.redirect('/account/edit/' + req.params.accountId);
                         } else {
-                            let newData = {
-                                firstName: req.body.firstName || user.firstName,
-                                lastName: req.body.lastName || user.lastName,
-                                userName: req.body.userName || user.userName,
-                                email: req.body.email || user.email,
-                                avatar: req.body.avatar || user.avatar,
-                                birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : user.birthDay,
-                                roles: req.body.roles || user.roles || [],
-                                permissions: req.body.permissions || user.permissions || [],
-                                status: req.body.status || user.status
+                            if (err) {
+                                req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                                return res.redirect('/account/edit/' + req.params.accountId);
                             }
-
-                            user = Object.assign(user, newData);
-
-                            user.save((err) => {
-                                if (err) {
-                                    req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
-                                    return res.redirect('/account/edit/' + req.params.accountId);
-                                }
-                                req.flash('success', 'Cập nhật thành công');
-                                res.redirect('/account');
-                            });
+                            /* Remove cache */
+                            client.del('permissions_' + user._id);
+                            /* End */
+                            req.flash('success', 'Cập nhật thành công');
+                            res.redirect('/account');
                         }
                     });
                 } catch (e) {
@@ -261,6 +259,76 @@ exports.postUpdate = (req, res, next) => {
                 }
             }
         });
+    } catch (e) {
+       next(e);
+    }
+}
+
+exports.getEditRolePermission = (req, res, next) => {
+    try {
+        async.parallel({
+            account: function(cb) {
+                UserModel.findById(req.params.accountId).exec(cb)
+            },
+            roles: function(cb) {
+                RoleModel.find({}).exec(cb)
+            },
+            permissions: function(cb) {
+                PermissionModel.find({status: 1}).exec(cb)
+            }
+        }, function(err, results) {
+            res.render('account/edit-role-permission', {
+                title: 'Phân quyền',
+                current: 'account',
+                data: results.account,
+                roles: results.roles,
+                permissions: results.permissions
+            });
+        });
+    } catch (e) {
+       next(e);
+    }
+}
+
+exports.postUpdateRolePermission = (req, res, next) => {
+    try {
+        try {
+            console.log('req', req.body.birthDay);
+            UserModel.findById({_id: req.params.accountId}).exec((err, user) => {
+                if (err) {
+                    req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                    res.redirect('/account/edit-role-permission/' + req.params.accountId);
+                } else {
+                    let newData = {
+                        firstName: req.body.firstName || user.firstName,
+                        lastName: req.body.lastName || user.lastName,
+                        userName: req.body.userName || user.userName,
+                        email: req.body.email || user.email,
+                        avatar: req.body.avatar || user.avatar,
+                        birthDay: req.body.birthDay ? moment(req.body.birthDay, 'DDMMYYYY').format() : user.birthDay,
+                        roles: req.body.roles || user.roles || [],
+                        permissions: req.body.permissions || [],
+                        status: req.body.status || user.status
+                    }
+
+                    user = Object.assign(user, newData);
+
+                    user.save((err) => {
+                        if (err) {
+                            req.flash('errors', 'Có lỗi xảy ra. Cập nhật thất bại');
+                            return res.redirect('/account/edit/' + req.params.accountId);
+                        }
+                        /* Remove cache */
+                        client.del('permissions_' + user._id);
+                        /* End */
+                        req.flash('success', 'Cập nhật thành công');
+                        res.redirect('/account');
+                    });
+                }
+            });
+        } catch (e) {
+            next(e);
+        }
     } catch (e) {
        next(e);
     }

@@ -2,6 +2,18 @@
 .valign-middle {
     vertical-align: middle !important;
 }
+.user-action {
+    margin: 0 2px;
+}
+.user-action i {
+    padding: 6px 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+.user-action:hover i {
+    background: #ffffff;
+    color: #1ba085;
+}
 
 /* crack froala editor lib*/
 .fr-box .show-placeholder div:first-child a, .fr-box .fr-wrapper div:first-child a {

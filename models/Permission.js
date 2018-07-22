@@ -26,6 +26,12 @@ permissonSchema.virtual('statusDisplay').get(function () {
     return (this.status ? 'Active' : 'Inactive');
 });
 
+permissonSchema.statics.createNew = function(data, cb) {
+    let newDoc = new Permission(data);
+    newDoc.save(cb);
+    // return this.find({ name: new RegExp(name, 'i') }, cb);
+};
+
 const Permission = mongoose.model('Permission', permissonSchema);
 
 module.exports = Permission;
