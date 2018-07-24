@@ -118,18 +118,12 @@ exports.postCreate = (req, res, next) => {
                         status: req.body.status || 0,
                         createdBy: req.session.user._id
                     }
-                    let newRecord = new NewsModel(postData);
-                    newRecord.save((err, result) => {
+                    NewsModel.cCreate(postData, (err, result) => {
                         if (err) {
                             req.flash('errors', 'Có lỗi xảy ra. Vui lòng thử lại');
                             return res.redirect('/news');
                         }
-                        NewsCategoryModel.findById(result.category).exec((err, category) => {
-                            if (category) {
-                                category.news.push(result._id);
-                                category.save();
-                            }
-                        });
+            
                         req.flash('success', 'Bài viết ' + result.title + ' đã được tạo');
                         res.redirect('/news');
                     });
@@ -139,7 +133,7 @@ exports.postCreate = (req, res, next) => {
             }
         });
     } catch (e) {
-       
+       next(e);
     }
 }
 

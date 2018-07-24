@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const NewsCategory = require('./NewsCategory');
 
 /**
  * News  Mongo DB model
@@ -57,6 +58,22 @@ newsSchema.virtual('imageUrl').get(function () {
 newsSchema.virtual('statusDisplay').get(function () {
     return (this.status ? 'Public' : 'Draft');
 });
+
+newsSchema.statics.cCreate = function(data, cb) {
+    let newDoc = new News(data);
+    newDoc.save((err, doc) => {
+        if (data.category) {
+            NewsCategory.findById(data.category).exec((err, nc) => {
+                if (nc) {
+                    nc.news.pull(doc._id);
+                    nc.news.push(doc._id);
+                    nc.save();
+                }
+            });
+        }
+        cb(err, doc);
+    })
+};
 
 /**
  * Remove news from news category
